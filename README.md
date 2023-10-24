@@ -3,7 +3,7 @@ Semestral project for the VAII subject
 
 # Online Learning Management System (LMS)
 
-[Project Logo](![image](https://github.com/TimeaFuntikova/semka-vajko/assets/83706590/ce99f4ac-d698-4f4f-b308-cf1c1944d74a))
+![Project Logo](![image](https://github.com/TimeaFuntikova/semka-vajko/assets/83706590/ce99f4ac-d698-4f4f-b308-cf1c1944d74a))
 
 ## Table of Contents
 - [Introduction](#introduction)
