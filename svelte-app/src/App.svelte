@@ -21,11 +21,7 @@
 			on:click={() => loadPage(webpageObj)}>{webpageObj.name}</button>
 {/each}
 <svelte:component this={selectedPage.component} />
-
 <style>
-	* {box-sizing: border-box}
-
-	/* Style tab links */
 	.tablink {
 		background-color: #555;
 		color: white;
@@ -33,7 +29,6 @@
 		border: none;
 		outline: none;
 		border: .5px solid #444;
-		border-radius: 0;
 		cursor: pointer;
 		padding: 14px 16px;
 		font-size: 17px;
@@ -43,5 +38,4 @@
 	.tablink:hover {
 		background-color: #777;
 	}
-
 </style>

@@ -1,7 +1,15 @@
-<link rel="stylesheet" href="../../../styles.css">
+<script>
+    import Form from "./signingInForm.svelte";
+    import Pagination from "./pagination.svelte";
+    import EnglishCourse from "./englishPic.svelte";
+</script>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Online Learning Management System</title>
+</head>
 <header>
     <h1>Welcome to the Online Learning Platform</h1>
-
 </header>
 <nav>
     <ul>
@@ -11,84 +19,37 @@
         <li><a href="login.html">Login</a></li>
     </ul>
 </nav>
-<main>
-    <div id="app"></div>
-    <div class="course-card">
-        <img src="course1.jpg" alt="Course 1 Image">
-        <h3>Course Title 1</h3>
-        <p>Course description goes here. This course covers...</p>
-        <a href="course1.html">Learn More</a>
-    </div>
-    <div class="course-card">
-        <img src="course2.jpg" alt="Course 2 Image">
-        <h3>Course Title 2</h3>
-        <p>Course description goes here. This course covers...</p>
-        <a href="course2.html">Learn More</a>
-    </div>
-</main>
-<footer>
-    <p>&copy; 2023 Online Learning Management System</p>
-</footer>
+<div class="row">
+     <div class="side">
+         <h2>Sign in</h2>
+         <h5>You need to be signed in to browse your courses and assignments</h5>
+         <Form/>
+     </div>
+     <div class="main">
+         <div class="course-card">
+             <img src="../pics/english-course.jpg" alt=""/>
+             <h3>English Course</h3>
+             <p>Course description goes here. This course covers...</p>
+             <a href="course1.html">Learn More</a>
+         </div>
+         <div class="course-card">
+             <EnglishCourse/>
+             <h3>German Course</h3>
+             <p>Course description goes here. This course covers...</p>
+             <a href="course2.html">Learn More</a>
+         </div>
+         <div class="course-card">
+             <EnglishCourse/>
+             <h3>VAII Course</h3>
+             <p>Course description goes here. This course covers...</p>
+             <a href="course3.html">Learn More</a>
+         </div>
+         <Pagination/>
+     </div>
+</div>
+ <footer>
+     <p>&copy; 2023 Online Learning Management System</p>
+ </footer>
 
-<style>
-    body, h1, h2, ul, li {
-        margin: 0;
-        padding: 0;
-    }
 
-    body {
-        font-family: Arial, sans-serif;
-        background-color: #f0f0f0;
-        margin: 0;
-        padding: 0;
-    }
 
-    header {
-        background-color: #007acc;
-        color: white;
-        text-align: center;
-        padding: 20px;
-    }
-
-    nav {
-        background-color: #333;
-        color: white;
-        padding: 10px;
-    }
-
-    nav ul {
-        list-style: none;
-        text-align: center;
-    }
-
-    nav li {
-        display: inline;
-        margin-right: 20px;
-    }
-
-    nav a {
-        text-decoration: none;
-        color: white;
-    }
-
-    main {
-        max-width: 1200px;
-        margin: 0 auto;
-        padding: 20px;
-    }
-
-    section {
-        margin-bottom: 20px;
-        background-color: #fff;
-        padding: 20px;
-        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    }
-
-    footer {
-        background-color: #333;
-        color: white;
-        text-align: center;
-        padding: 10px;
-    }
-
-</style>
