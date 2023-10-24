@@ -125,6 +125,6 @@ Running the project on local machine:
 
 ## License
 
-This project is the intellectual property of Timea Funtikova and is intended for educational purposes only. All rights reserved.
+This project is the intellectual property and is intended for educational purposes only. All rights reserved.
 
 
