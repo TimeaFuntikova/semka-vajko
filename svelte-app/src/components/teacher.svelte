@@ -3,11 +3,11 @@
 </header>
 <nav>
     <ul>
-        <li><a href="mycourses.html">My Courses</a></li>
-        <li><a href="createcourse.html">Create Course</a></li>
-        <li><a href="studentmanagement.html">Student Management</a></li>
-        <li><a href="messages.html">Messages</a></li>
-        <li><a href="logout.html">Logout</a></li>
+        <li><a href="#">My Courses</a></li>
+        <li><a href="#">Create Course</a></li>
+        <li><a href="#">Student Management</a></li>
+        <li><a href="#">Messages</a></li>
+        <li><a href="#">Logout</a></li>
     </ul>
 </nav>
 <main>
@@ -16,17 +16,17 @@
         <ul class="course-list">
             <li>
                 <h3>Course Title 1</h3>
-                <a href="course1.html">Edit Course</a>
+                <a href="#">Edit Course</a>
             </li>
             <li>
                 <h3>Course Title 2</h3>
-                <a href="course2.html">Edit Course</a>
+                <a href="#">Edit Course</a>
             </li>
         </ul>
     </section>
     <section>
         <h3>Create a New Course</h3>
-        <a href="createcourse.html">Create a New Course</a>
+        <a href="#">Create a New Course</a>
     </section>
     <section>
         <h3>Student Management</h3>
@@ -34,12 +34,12 @@
             <li>
                 <h3>[Student Name]</h3>
                 <p>Progress: 60%</p>
-                <a href="studentdetails.html">View Details</a>
+                <a href="#">View Details</a>
             </li>
             <li>
                 <h3>[Student Name]</h3>
                 <p>Progress: 40%</p>
-                <a href="studentdetails.html">View Details</a>
+                <a href="#">View Details</a>
             </li>
         </ul>
     </section>
