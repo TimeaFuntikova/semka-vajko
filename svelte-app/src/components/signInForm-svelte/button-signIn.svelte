@@ -4,7 +4,7 @@
     import {AppModel} from "@/types/AppModel";
 
     function handleClick(e) {
-        AppModel.service.handler.handleSubmit(e);
+        AppModel.service.handler.handleSubmit();
     }
 </script>
 

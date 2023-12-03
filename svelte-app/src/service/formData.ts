@@ -15,7 +15,7 @@ export class FormData {
   }
 
   storePassword(input: string): void {
-    this.username = input;
+    this.password = input;
   }
 
   clear(): void {

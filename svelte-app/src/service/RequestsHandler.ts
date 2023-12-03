@@ -14,24 +14,38 @@ export class RequestsHandler {
     );
   }
 
-  private logInputs(event) {
-    console.log(event);
-    console.log(AppModel.service.formDataHandler.getUsername());
-    console.log(AppModel.service.formDataHandler.getPassword());
+  private validInputs(): boolean {
+    const username: string = AppModel.service.formDataHandler.getUsername();
+    console.log("username: ", username);
+    const password: string = AppModel.service.formDataHandler.getPassword();
+    console.log("password: ", password);
+    return username != "" && password != "";
   }
-  handleSubmit(event) {
-    this.logInputs(event);
-    //this.fetchFromServer();
+
+  /**
+   * A request to server will be sent only if the for data is valid.
+   */
+  handleSubmit(): void {
+    if (this.validInputs()) this.fetchFromServer();
+    console.log("Noticed.");
   }
+
+  /**
+   * This request should decide whether a user already exists in the database.
+   * If not-> should redirect to register formular and THEN should create the user in db
+   * If already does -> should redirect to login landing page.
+   */
+  //TODO: redirecting to sites depending on the login status.
   fetchFromServer() {
+    console.log("Data retrieved is valid. Sending request.");
     fetch("/api/register", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        name: "newUser",
-        password: "newPassword",
+        name: AppModel.service.formDataHandler.getUsername(),
+        password: AppModel.service.formDataHandler.getPassword(),
       }),
     })
       .then((response) => response.json())
