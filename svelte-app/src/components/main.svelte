@@ -1,5 +1,6 @@
-<script>
-    import Form from "./signingInForm.svelte";
+<script lang="ts">
+    import Form from "./signInForm-svelte/signingInForm.svelte";
+    import Button from "./signInForm-svelte/button-signIn.svelte";
     import Pagination from "./pagination.svelte";
     import EnglishCourse from "./englishPic.svelte";
 </script>
@@ -25,6 +26,7 @@
          <h2>Sign in</h2>
          <h5>You need to be signed in to browse your courses and assignments</h5>
          <Form/>
+         <Button/>
      </div>
      <div class="main">
          <div class="course-card">
