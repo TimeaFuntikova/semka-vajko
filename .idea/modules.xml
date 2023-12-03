@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/online-learning-platform/online-learning-platform.iml" filepath="$PROJECT_DIR$/online-learning-platform/online-learning-platform.iml" />
+      <module fileurl="file://$PROJECT_DIR$/semestral-api/semestral-api.iml" filepath="$PROJECT_DIR$/semestral-api/semestral-api.iml" />
       <module fileurl="file://$PROJECT_DIR$/semestralProjectVajko.iml" filepath="$PROJECT_DIR$/semestralProjectVajko.iml" />
     </modules>
   </component>
