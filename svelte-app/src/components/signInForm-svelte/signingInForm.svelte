@@ -4,7 +4,7 @@
         TextInput,
         PasswordInput,
     } from "carbon-components-svelte";
-    import {isPasswordValid, passwordToStore, usernameToStore} from "@/storage/form.storage";
+    import {isPasswordValid} from "@/storage/form.storage";
     import {AppModel} from "@/types/AppModel";
 
     let password: string = "";
