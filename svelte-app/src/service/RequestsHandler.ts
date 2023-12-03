@@ -1,8 +1,3 @@
-import {
-  isPasswordValid,
-  passwordToStore,
-  usernameToStore,
-} from "@/storage/form.storage";
 import { AppModel } from "@/types/AppModel";
 
 export class RequestsHandler {

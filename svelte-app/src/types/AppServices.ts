@@ -1,4 +1,4 @@
-import { RequestsHandler } from "../service/RequestsHandler";
+import { RequestsHandler } from "@/service/RequestsHandler";
 import { FormData } from "@/service/formData";
 
 export class AppServices {
