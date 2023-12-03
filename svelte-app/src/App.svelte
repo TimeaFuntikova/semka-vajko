@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
 	import MainPage from "./components/main.svelte";
 	import StudentPage from "./components/student.svelte";
 	import TeacherPage from "./components/teacher.svelte";
@@ -26,7 +26,6 @@
 		background-color: #555;
 		color: white;
 		float: left;
-		border: none;
 		outline: none;
 		border: .5px solid #444;
 		cursor: pointer;
