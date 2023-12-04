@@ -1,8 +1,8 @@
 <script lang="ts">
-    import Form from "./signInForm-svelte/signingInForm.svelte";
-    import Button from "./signInForm-svelte/button-signIn.svelte";
-    import Pagination from "./pagination.svelte";
-    import EnglishCourse from "./englishPic.svelte";
+    import Form from "../signInForm-svelte/signingInForm.svelte";
+    import Button from "../signInForm-svelte/button-signIn.svelte";
+    import Pagination from "../pagination.svelte";
+    import EnglishCourse from "../englishPic.svelte";
 </script>
 
 <head>
@@ -30,7 +30,7 @@
      </div>
      <div class="main">
          <div class="course-card">
-             <img src="../pics/english-course.jpg" alt=""/>
+             <img src="../../pics/english-course.jpg" alt=""/>
              <h3>English Course</h3>
              <p>Course description goes here. This course covers...</p>
              <a href="#">Learn More</a>
