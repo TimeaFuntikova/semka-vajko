@@ -1,8 +1,9 @@
 package com.semestral.entity;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import lombok.Data;
-
-import javax.persistence.*;
 
 /**
  * Represents a user's enrollment in a course.
@@ -12,18 +13,10 @@ import javax.persistence.*;
 @Entity
 @Table(name = "enrollments")
 public class Enrollment {
+
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "custom_id")
     private Long Id;
 
-    @Column(name = "custom_name")
     private String Name;
-
-    @ManyToOne
-    private User user;
-
-    @ManyToOne
-    private Course course;
 
 }

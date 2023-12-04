@@ -1,9 +1,11 @@
 package com.semestral.entity;
 
+import jakarta.persistence.GeneratedValue;
 import lombok.Data;
 
-import javax.persistence.*;
-
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 /**
  * Represents a lesson within a course.
  */
@@ -13,13 +15,9 @@ import javax.persistence.*;
 
 public class Lesson {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "custom_id")
     private Long Id;
 
-    @Column(name = "custom_name")
     private String Name;
 
-    @ManyToOne
-    private Course course;
+
 }

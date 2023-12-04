@@ -6,4 +6,17 @@
       <sourceFolder url="file://$MODULE_DIR$/semestral-api/src/main/resources" type="java-resource" />
     </content>
   </component>
+  <component name="FacetManager">
+    <facet type="jpa" name="JPA">
+      <configuration>
+        <setting name="validation-enabled" value="true" />
+        <setting name="provider-name" value="Hibernate" />
+        <datasource-mapping>
+          <factory-entry name="entityManagerFactory" value="4fcc3769-5046-483b-9269-21cbada8a3e8" />
+        </datasource-mapping>
+        <naming-strategy-map />
+        <deploymentDescriptor name="persistence.xml" url="file://$MODULE_DIR$/semestral-api/src/main/resources/META-INF/persistence.xml" />
+      </configuration>
+    </facet>
+  </component>
 </module>

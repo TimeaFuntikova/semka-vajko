@@ -1,7 +1,0 @@
-<persistence-unit name="default" transaction-type="RESOURCE_LOCAL">
-    <class>com.semestral.entity.BaseEntity</class>
-    <class>com.semestral.entity.Course</class>
-    <class>com.semestral.entity.Enrollment</class>
-    <class>com.semestral.entity.Lesson</class>
-    <class>com.semestral.entity.User</class>
-</persistence-unit>
