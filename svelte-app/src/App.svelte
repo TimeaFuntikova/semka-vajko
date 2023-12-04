@@ -1,8 +1,8 @@
 <script lang="ts">
-	import MainPage from "./components/main.svelte";
-	import StudentPage from "./components/student.svelte";
-	import TeacherPage from "./components/teacher.svelte";
-	import AboutPage from "./components/about.svelte";
+	import MainPage from "./components/pages/main.svelte";
+	import StudentPage from "./components/pages/student.svelte";
+	import TeacherPage from "./components/pages/teacher.svelte";
+	import AboutPage from "./components/pages/about.svelte";
 	const pages = [
 		{ name: "Main", component: MainPage },
 		{ name: "Student", component: StudentPage },
