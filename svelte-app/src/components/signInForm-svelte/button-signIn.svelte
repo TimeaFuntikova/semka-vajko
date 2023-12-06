@@ -6,8 +6,15 @@
 
     let isRegistrationVisible = false;
 
-    function handleClick(e) {
-        //if(AppModel.service.handler.validInputs()) AppModel.service.handler.fetchFromServer();
+    async function handleClick(e): Promise<void> {
+        try {
+            //input valid
+            const obtainedUsers: Promise<string> = await AppModel.service.handler.sendRequestGetAllUsers();
+            await AppModel.service.handler.setAllUsers(obtainedUsers);
+            await AppModel.service.handler.isRegistered() ? await AppModel.service.handler.loggedIn() : AppModel.service.handler.unregisteredUser();
+        } catch (error) {
+            console.error("Error: ", error);
+        }
     }
 
     function handleRegistrationClick() {
