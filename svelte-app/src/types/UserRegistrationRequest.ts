@@ -1,4 +1,6 @@
 export class UserRegistrationRequest {
-  name: String = "";
-  password: String = "";
+  name: string = "";
+  password: string = "";
+  newNameDemand: string = "";
+  newPasswordDemand: string = "";
 }
