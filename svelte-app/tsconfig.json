@@ -1,5 +1,7 @@
 {
   "compilerOptions": {
+    "target": "es6",
+    "lib": ["es2017", "dom"],
     "baseUrl": "./",
     "moduleResolution": "node",
     "esModuleInterop": true,
