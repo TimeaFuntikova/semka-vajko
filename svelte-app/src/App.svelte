@@ -1,40 +1,47 @@
 <script lang="ts">
-	import MainPage from "./components/pages/main.svelte";
-	import StudentPage from "./components/pages/student.svelte";
-	import TeacherPage from "./components/pages/teacher.svelte";
-	import AboutPage from "./components/pages/about.svelte";
-	const pages = [
-		{ name: "Main", component: MainPage },
-		{ name: "Student", component: StudentPage },
-		{ name: "Teacher", component: TeacherPage },
-		{ name: "About", component: AboutPage }
-	];
+    import { onMount } from 'svelte';
+    import MainPage from "./components/pages/main.svelte";
+    import StudentPage from "./components/pages/student.svelte";
+    import TeacherPage from "./components/pages/teacher.svelte";
+    import AboutPage from "./components/pages/about.svelte";
+    import ProfilePage from "./components/pages/profile.svelte";
+    import { isLoggedIn } from "@/storage/form.storage";
 
-	let selectedPage = pages[0];
-	$: console.dir(selectedPage)
-	const loadPage = (obj) => selectedPage = obj;
+    let selectedPage = MainPage;
+
+    function loadPage(component) {
+        selectedPage = component;
+    }
+
+    $: console.dir(selectedPage);
 </script>
 
-{#each pages as webpageObj}
-	<button class="tablink"
-			title={webpageObj.name}
-			on:click={() => loadPage(webpageObj)}>{webpageObj.name}</button>
-{/each}
-<svelte:component this={selectedPage.component} />
-<style>
-	.tablink {
-		background-color: #555;
-		color: white;
-		float: left;
-		outline: none;
-		border: .5px solid #444;
-		cursor: pointer;
-		padding: 14px 16px;
-		font-size: 17px;
-		width: 25%;
-	}
+<button on:click={() => loadPage(MainPage)}>Main</button>
+<button on:click={() => loadPage(StudentPage)}>Student</button>
+<button on:click={() => loadPage(TeacherPage)}>Teacher</button>
+<button on:click={() => loadPage(AboutPage)}>About</button>
 
-	.tablink:hover {
-		background-color: #777;
-	}
-</style>
+{#if selectedPage !== null}
+    {#if $isLoggedIn}
+        <ProfilePage />
+    {:else}
+        <svelte:component this={selectedPage} />
+    {/if}
+{/if}
+
+    <style>
+    button {
+    background-color: #555;
+    color: white;
+    outline: none;
+    border: 1px solid #444;
+    cursor: pointer;
+    padding: 14px 16px;
+    font-size: 17px;
+    margin: 5px;
+    }
+
+    button:hover {
+    background-color: #777;
+    }
+    </style>
