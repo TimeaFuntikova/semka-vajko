@@ -48,8 +48,8 @@ This is an Online Learning Management System (LMS) developed as a part of the su
 ## Technologies Used
 - Front-End Framework: [Svelte](https://svelte.dev/)
 - CSS Framework: [Bootstrap](https://getbootstrap.com/)
-- Back-End Framework: [Laravel](https://laravel.com/)
-- Database: [MySQL](https://www.mysql.com/)
+- Back-End Framework: [Spring/SpringBoot](https://spring.io/projects/spring-boot)
+- Database: [PostgreSQL](https://www.postgresql.org/)
 - Containerization: [Docker](https://www.docker.com/)
 
 ## Getting Started
@@ -62,19 +62,12 @@ Before begining, following requirements are needed:
 - **Docker:**
   - [Docker](https://www.docker.com/) - [download](https://www.docker.com/get-started).
 
-- **PHP and Composer:**
-  - [PHP](https://www.php.net/downloads) installed on your machine.
-  - [Composer](https://getcomposer.org/download/) installed for managing Laravel's dependencies.
-
 - **Node.js and npm:**
   - [Node.js](https://nodejs.org/) and [npm](https://www.npmjs.com/) for managing JavaScript dependencies and building your Svelte front end.
 
 - **Database Management System:**
-  - A database management system such as [MySQL](https://www.mysql.com/downloads/) if you're using MySQL as your database.
-
-- **Web Server (Optional):**
-  - A web server such as [Nginx](https://www.nginx.com/) or [Apache](https://httpd.apache.org/) if you need to serve your Svelte application locally.
-
+  - A database management system such as [DBeaver](https://dbeaver.io/).
+    
 - **Git:**
   - [Git](https://git-scm.com/) for version control and collaboration on your project.
 
@@ -89,10 +82,6 @@ Running the project on local machine:
 
 2. **Installing Dependencies:**
 
-   - Laravel:
-     ```
-     composer install
-     ```
    - JavaScript for Svelte:
      ```
      npm install
@@ -103,25 +92,15 @@ Running the project on local machine:
    - Update the database configuration and any other environment-specific settings in the `.env` file.
 
 4. **Database Setup:**
-   - Create a new database on your database management system (e.g., MySQL) as configured in your `.env` file.
-   - Run the database migrations to set up the necessary tables:
-     ```
-     php artisan migrate
-     ```
+   - Create a new database on your database management system (e.g., POstgreSQL) as configured in your `.env` file.
+   - Run the database migrations to set up the necessary tables
 
 5. **Compile Svelte:**
-   - Compile the Svelte front-end using:
+   - Compile the Svelte front-end using and run it locally:
      ```
      npm run build
+     npm run dev
      ```
-
-6. **Start the Development Server:**
-   - Start the Laravel development server by running:
-     ```
-     php artisan serve
-     ```
-   - Access the application in your web browser at `http://localhost:8000` or the URL provided by the Laravel development server.
-  
 
 ## License
 
