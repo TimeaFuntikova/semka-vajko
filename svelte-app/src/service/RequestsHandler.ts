@@ -58,7 +58,6 @@ export class RequestsHandler {
     await this.sendVerifyRequest();
     isLoggedIn.set(true);
     console.log("User has been logged in.");
-    //TODO:  redirect to profile page.
   }
 
   unregisteredUser(): void {
@@ -72,11 +71,12 @@ export class RequestsHandler {
    * If he does not, a new user in the database is created and returned for the user as notification.
    */
   async sendRegistrationRequest(): Promise<void> {
-    const requestData: { password: string; name: string } = {
+    const requestData: { name: string; password: string } = {
       name: AppModel.service.formDataHandler.getUsername(),
       password: AppModel.service.formDataHandler.getPassword(),
     };
 
+    console.log(requestData);
     fetch("http://localhost:8080/api/createUser", {
       method: "POST",
       headers: {
@@ -176,13 +176,54 @@ export class RequestsHandler {
 
     console.log(requestData);
 
-    fetch("http://localhost:8080/api/updateUserData", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
+    const response: Response = await fetch(
+      "http://localhost:8080/api/updateUserData",
+      {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(requestData),
       },
-      body: JSON.stringify(requestData),
-    })
+    )
+      .then(async (response: Response): Promise<any> => {
+        if (!response.ok) {
+          try {
+            const errorResponse = await response.text();
+          } catch (error) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+          }
+        }
+        return response.text();
+      })
+      .then((data: any): void => {
+        console.log("Success: ", data);
+      })
+      .catch((error: Error): void => {
+        console.error("Error: ", error.message);
+      });
+  }
+
+  async sendDeleteRequest(): Promise<void> {
+    const requestData: UserRegistrationRequest = {
+      name: AppModel.service.formDataHandler.getUsername(),
+      password: AppModel.service.formDataHandler.getPassword(),
+      newNameDemand: AppModel.service.formDataHandler.getNewUsername(),
+      newPasswordDemand: AppModel.service.formDataHandler.getNewPassword(),
+    };
+
+    console.log(requestData);
+
+    const response: Response = await fetch(
+      "http://localhost:8080/api/deleteUser",
+      {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(requestData),
+      },
+    )
       .then(async (response: Response): Promise<any> => {
         if (!response.ok) {
           try {

@@ -1,6 +1,7 @@
 <script>
     import Form from "../changingData/updateForm.svelte";
     import Button from "../changingData/updateDataButton.svelte";
+    import DeleteButton from "../deleteButton/deleteButton.svelte";
 </script>
 
 
@@ -27,5 +28,6 @@
     <div class="course-card">
         <h3>DELETE ACCOUNT</h3>
         <p>This action cannot be taken back.</p>
+        <DeleteButton/>
     </div>
 </main>
