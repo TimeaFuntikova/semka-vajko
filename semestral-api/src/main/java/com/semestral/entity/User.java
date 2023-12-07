@@ -64,16 +64,6 @@ public class User {
         }
     }
 
-    public static List<User> getAllUsers() {
-        String query = "SELECT * FROM users";
-        return DatabaseUtil.executeQuery(DatabaseUtil.getConnection(), query, resultSet -> {
-            User user = new User();
-            user.setId(resultSet.getLong("id"));
-            user.setUsername(resultSet.getString("username"));
-            return user;
-        });
-    }
-
     public static User getUserById(long userId) {
         String query = "SELECT * FROM users WHERE id = ?";
         List<User> users = DatabaseUtil.executeQuery(DatabaseUtil.getConnection(), query, resultSet -> {
@@ -88,15 +78,17 @@ public class User {
         return users.isEmpty() ? null : users.get(0);
     }
 
-    public static User update(User userToBeUpdated) {
-        String query = "UPDATE users SET username = ?, hashed_password = ?, salt = ? WHERE username = ?";
+    public static boolean update(User userToBeUpdated, String newNameDemand, String hashedPassword, byte[] salt) {
+        if (userToBeUpdated == null) throw new IllegalArgumentException("User cannot be null");
+
+        String query = "UPDATE users SET username = ?, hashed_password = ?, salt = ? WHERE id = ?";
         return DatabaseUtil.update(
                 query,
-                userToBeUpdated.getUsername(),
-                userToBeUpdated.getHashedPassword(),
-                userToBeUpdated.getSalt(),
-                userToBeUpdated.getUsername()
-        );
+                newNameDemand,
+                hashedPassword,
+                salt,
+                getUserById(userToBeUpdated.getId())
+                );
     }
 
     public static User delete(User userToDelete) {

@@ -92,11 +92,11 @@ public class RootController {
             if (registrationRequest.getNewNameDemand() == null) registrationRequest.setNewNameDemand(registrationRequest.getName());
             //if (registrationRequest.getNewPasswordDemand() == null) registrationRequest.setNewPasswordDemand(registrationRequest.getPassword());
 
-            User userToReturn = userService.update(userToBeUpdated, registrationRequest.getNewNameDemand(), registrationRequest.getNewPasswordDemand());
+            boolean updateSucessfull = userService.update(userToBeUpdated, registrationRequest.getNewNameDemand(), registrationRequest.getNewPasswordDemand());
 
-            System.out.println("userToReturn" + userToReturn);
+            System.out.println("updateSuccessfull" + updateSucessfull);
 
-            return ResponseEntity.ok(userToReturn);
+            return ResponseEntity.ok(updateSucessfull);
         } catch (RuntimeException e) {
             throw new RuntimeException(e);
         }

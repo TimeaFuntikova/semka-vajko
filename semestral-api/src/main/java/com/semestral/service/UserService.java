@@ -1,8 +1,6 @@
 package com.semestral.service;
 
 import com.semestral.entity.User;
-
-import java.sql.SQLException;
 import java.util.List;
 
 public interface UserService {
@@ -10,7 +8,7 @@ public interface UserService {
 
     User create(User user);
 
-    User update(User user, String newNameDemand, String newPasswordDemand);
+    boolean update(User user, String newNameDemand, String newPasswordDemand);
 
     List<User> getAllUsers();
 

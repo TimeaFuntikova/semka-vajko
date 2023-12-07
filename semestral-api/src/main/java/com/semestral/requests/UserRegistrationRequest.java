@@ -1,16 +1,11 @@
 package com.semestral.requests;
 
+import lombok.Getter;
+@Getter
 public class UserRegistrationRequest {
-    public String getName() {
-        return name;
-    }
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public String getPassword() {
-        return password;
     }
 
     public void setPassword(String password) {
@@ -20,16 +15,8 @@ public class UserRegistrationRequest {
     private String name;
     private String password;
 
-    public String getNewNameDemand() {
-        return newNameDemand;
-    }
-
     public void setNewNameDemand(String newNameDemand) {
         this.newNameDemand = newNameDemand;
-    }
-
-    public String getNewPasswordDemand() {
-        return newPasswordDemand;
     }
 
     public void setNewPasswordDemand(String newPasswordDemand) {

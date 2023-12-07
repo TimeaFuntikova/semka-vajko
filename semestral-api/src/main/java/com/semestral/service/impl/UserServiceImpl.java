@@ -55,7 +55,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User update(User userToBeUpdated, String newNameDemand, String newPasswordDemand) {
+    public boolean update(User userToBeUpdated, String newNameDemand, String newPasswordDemand) {
 
         //ak sa zmeni len meno:
         if (isUsernameTaken(newNameDemand)) {
@@ -68,15 +68,10 @@ public class UserServiceImpl implements UserService {
 
         //Password should be validated on client's side at this time -- having valid one now...
         //AND SHOULD BE UPTADED ONLY IF WAS SET
-       if (newPasswordDemand != null) {
-           byte[] salt = PasswordUtil.generateSalt();
-           String hashedPassword = PasswordUtil.hashPassword(newPasswordDemand, salt);
-           userToBeUpdated.setHashedPassword(hashedPassword);
-           userToBeUpdated.setSalt(salt);
-           userToBeUpdated.setUsername(newNameDemand);
-       }
+        byte[] salt = PasswordUtil.generateSalt();
+        String hashedPassword = PasswordUtil.hashPassword(newPasswordDemand, salt);
 
-        return User.update(userToBeUpdated);
+        return User.update(userToBeUpdated, newNameDemand, hashedPassword, salt);
     }
 
     @Override

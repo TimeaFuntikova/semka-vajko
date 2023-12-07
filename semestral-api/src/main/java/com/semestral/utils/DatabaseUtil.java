@@ -24,19 +24,6 @@ public class DatabaseUtil {
             e.printStackTrace();
         }
     }
-
-    public static void closeConnection() {
-        try {
-            if (statement != null) {
-                statement.close();
-            }
-            if (connection != null) {
-                connection.close();
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
     public static User create(String query, Object... params) throws SQLException {
         try (PreparedStatement preparedStatement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
             for (int i = 0; i < params.length; i++) {
@@ -54,26 +41,30 @@ public class DatabaseUtil {
         }
     }
 
-    public static User update(String query, Object... params)  {
-        try (PreparedStatement preparedStatement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
+    public static boolean update(String query, Object... params) {
+        try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
             for (int i = 0; i < params.length; i++) {
-                preparedStatement.setObject(i + 1, params[i]);
+                if (params[i] instanceof User) {
+                    User userParam = (User) params[i];
+                    preparedStatement.setObject(i + 1, userParam.getId(), Types.INTEGER);
+                } else {
+                    preparedStatement.setObject(i + 1, params[i]);
+                }
             }
-           preparedStatement.executeUpdate();
 
-                try (ResultSet generatedKeys = preparedStatement.getGeneratedKeys()) {
-                    if (generatedKeys.next()) {
-                        int updatedUserId = generatedKeys.getInt(1);
+            int affectedRows = preparedStatement.executeUpdate();
 
-                        System.out.println("getting user by id:"+ User.getUserById(updatedUserId));
-                        return User.getUserById(updatedUserId);
-                    }
+            if (affectedRows > 0) {
+                System.out.println("Update successful. Rows affected: " + affectedRows);
+                return true;
+            } else {
+                System.out.println("Update failed. No rows affected.");
+                return false;
             }
         } catch (SQLException e) {
             e.printStackTrace();
+            return false;
         }
-
-        return null;
     }
 
 
