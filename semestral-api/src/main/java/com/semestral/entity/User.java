@@ -23,7 +23,7 @@ public class User {
     @Column(name = "username", nullable = false)
     private String username;
 
-    @Column(name = "password", nullable = false)
+    @Column(name = "password")
     private String password;
 
     @Column(name="hashed_password", nullable = false)
@@ -54,11 +54,11 @@ public class User {
 
 
 
-    public static User create(User user) {
+    public static User create(User userToBeInserted) {
         String insertQuery = "INSERT INTO users (username, hashed_password, salt) VALUES (?, ?, ?)";
 
         try {
-            return DatabaseUtil.create(insertQuery, user.getUsername(), user.getHashedPassword(), user.getSalt());
+            return DatabaseUtil.create(insertQuery, userToBeInserted.getUsername(), userToBeInserted.getHashedPassword(), userToBeInserted.getSalt());
         } catch (SQLException e) {
             throw new RuntimeException("Error creating user", e);
         }
@@ -75,25 +75,33 @@ public class User {
     }
 
     public static User getUserById(long userId) {
-        String query = "SELECT * FROM users WHERE id = %d";
+        String query = "SELECT * FROM users WHERE id = ?";
         List<User> users = DatabaseUtil.executeQuery(DatabaseUtil.getConnection(), query, resultSet -> {
             User user = new User();
             user.setId(resultSet.getLong("id"));
             user.setUsername(resultSet.getString("username"));
+            user.setHashedPassword(resultSet.getString("hashed_password"));
+            user.setSalt(resultSet.getBytes("salt"));
             return user;
         }, userId);
 
         return users.isEmpty() ? null : users.get(0);
     }
 
-    public void update() {
-        String query = "UPDATE users SET username = '%s' WHERE id = %d";
-        DatabaseUtil.update(query, this.getUsername(), this.getId());
+    public static User update(User userToBeUpdated) {
+        String query = "UPDATE users SET username = ?, hashed_password = ?, salt = ? WHERE username = ?";
+        return DatabaseUtil.update(
+                query,
+                userToBeUpdated.getUsername(),
+                userToBeUpdated.getHashedPassword(),
+                userToBeUpdated.getSalt(),
+                userToBeUpdated.getUsername()
+        );
     }
 
-    public void delete() {
-        String query = "DELETE FROM users WHERE id = %d";
-        DatabaseUtil.delete(query, this.getId());
+    public static User delete(User userToDelete) {
+        String query = "DELETE FROM users WHERE username = ?";
+        return DatabaseUtil.delete(query, userToDelete.getUsername());
     }
 
 }

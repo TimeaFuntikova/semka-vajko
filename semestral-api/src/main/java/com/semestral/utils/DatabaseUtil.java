@@ -37,15 +37,6 @@ public class DatabaseUtil {
             e.printStackTrace();
         }
     }
-
-    private static boolean isHex(String str) {
-        try {
-            Long.parseLong(str, 16);
-            return true;
-        } catch (NumberFormatException e) {
-            return false;
-        }
-    }
     public static User create(String query, Object... params) throws SQLException {
         try (PreparedStatement preparedStatement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
             for (int i = 0; i < params.length; i++) {
@@ -63,27 +54,53 @@ public class DatabaseUtil {
         }
     }
 
+    public static User update(String query, Object... params)  {
+        try (PreparedStatement preparedStatement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
+            for (int i = 0; i < params.length; i++) {
+                preparedStatement.setObject(i + 1, params[i]);
+            }
+           preparedStatement.executeUpdate();
 
+                try (ResultSet generatedKeys = preparedStatement.getGeneratedKeys()) {
+                    if (generatedKeys.next()) {
+                        int updatedUserId = generatedKeys.getInt(1);
 
-
-
-    public static void update(String query, Object... params) {
-        try (Statement statement = connection.createStatement()) {
-            String updateQuery = String.format(query, params);
-            statement.executeUpdate(updateQuery);
+                        System.out.println("getting user by id:"+ User.getUserById(updatedUserId));
+                        return User.getUserById(updatedUserId);
+                    }
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }
+
+        return null;
     }
 
-    public static void delete(String query, Object... params) {
-        try (Statement statement = connection.createStatement()) {
-            String deleteQuery = String.format(query, params);
-            statement.execute(deleteQuery);
+
+    public static User delete(String query, Object... params) {
+        User deletedUser = null;
+
+        try (PreparedStatement preparedStatement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
+            for (int i = 0; i < params.length; i++) {
+                preparedStatement.setObject(i + 1, params[i]);
+            }
+
+            preparedStatement.executeUpdate();
+
+                try (ResultSet generatedKeys = preparedStatement.getGeneratedKeys()) {
+                    if (generatedKeys.next()) {
+                        int deletedUserId = generatedKeys.getInt(1);
+                        deletedUser = User.getUserById(deletedUserId);
+                    }
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }
+
+        return deletedUser;
     }
+
+
 
     public static <T> List<T> executeQuery(Connection connection, String query, RowMapper<T> rowMapper, Object... params) {
         List<T> results = new ArrayList<>();

@@ -2,15 +2,21 @@ package com.semestral.service;
 
 import com.semestral.entity.User;
 
+import java.sql.SQLException;
 import java.util.List;
 
 public interface UserService {
     boolean isUsernameTaken(String username);
 
     User create(User user);
-    void saveUser(User user);
+
+    User update(User user, String newNameDemand, String newPasswordDemand);
 
     List<User> getAllUsers();
 
-    User getUserById(Long userId);
+    User getUserByUsername(String username);
+
+    boolean verify(String password, String username);
+
+    User delete(User userToDelete);
 }

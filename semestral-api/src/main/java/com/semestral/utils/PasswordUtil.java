@@ -26,6 +26,12 @@ public class PasswordUtil {
         }
     }
 
+    // Verify the entered password against the stored hashed password and salt
+    public static boolean verifyPassword(String enteredPassword, String storedHashedPassword, byte[] salt) {
+        String hashedEnteredPassword = hashPassword(enteredPassword, salt);
+        return hashedEnteredPassword != null && hashedEnteredPassword.equals(storedHashedPassword);
+    }
+
     // Convert byte array to hex string
     private static String bytesToHex(byte[] bytes) {
         StringBuilder hexStringBuilder = new StringBuilder();

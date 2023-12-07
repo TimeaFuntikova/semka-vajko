@@ -6,7 +6,6 @@ import com.semestral.utils.DatabaseUtil;
 import com.semestral.utils.RowMapper;
 import org.springframework.stereotype.Service;
 import com.semestral.utils.PasswordUtil;
-import java.sql.SQLException;
 import java.util.List;
 
 @Service
@@ -21,25 +20,19 @@ public class UserServiceImpl implements UserService {
         return !result.isEmpty() && result.get(0);
     }
     @Override
-    public User create(User user) {
-        if (isUsernameTaken(user.getUsername())) {
+    public User create(User userToBeInserted) {
+        if (isUsernameTaken(userToBeInserted.getUsername())) {
             throw new RuntimeException("Username is already taken");
         }
         byte[] salt = PasswordUtil.generateSalt();
-        String hashedPassword = PasswordUtil.hashPassword(user.getPassword(), salt);
+        String hashedPassword = PasswordUtil.hashPassword(userToBeInserted.getPassword(), salt);
 
-        user.setHashedPassword(hashedPassword);
-        user.setSalt(salt);
+        userToBeInserted.setHashedPassword(hashedPassword);
+        userToBeInserted.setSalt(salt);
 
-        return User.create(user);
+        return User.create(userToBeInserted);
     }
 
-    @Override
-    public void saveUser(User user) {
-        // Implement logic to save the user
-        String query = "INSERT INTO users (custom_name, hashed_password, salt) VALUES (?, ?, ?)";
-        DatabaseUtil.update(query, user.getUsername(), user.getHashedPassword(), user.getSalt());
-    }
 
     @Override
     public List<User> getAllUsers() {
@@ -48,9 +41,47 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User getUserById(Long userId) {
-        String query = "SELECT * FROM users WHERE id = ?";
-        return DatabaseUtil.executeQuery(DatabaseUtil.getConnection(), query, mapUserRow, userId).stream().findFirst().orElse(null);
+    public User getUserByUsername(String username) {
+        String query = "SELECT * FROM users WHERE username = ?";
+        return DatabaseUtil.executeQuery(DatabaseUtil.getConnection(), query, mapUserRow, username).stream().findFirst().orElse(null);
+    }
+
+    @Override
+    public boolean verify(String password, String username) {
+        User retrievedUser = getUserByUsername(username);
+        byte[] saltFromUser = retrievedUser.getSalt();
+        String storedHashPassword = retrievedUser.getHashedPassword();
+        return PasswordUtil.verifyPassword(password,storedHashPassword, saltFromUser);
+    }
+
+    @Override
+    public User update(User userToBeUpdated, String newNameDemand, String newPasswordDemand) {
+
+        //ak sa zmeni len meno:
+        if (isUsernameTaken(newNameDemand)) {
+            throw new RuntimeException("Requested username is already taken choose another.");
+        }
+
+        if (newNameDemand != null) {
+            userToBeUpdated.setUsername(newNameDemand);
+        }
+
+        //Password should be validated on client's side at this time -- having valid one now...
+        //AND SHOULD BE UPTADED ONLY IF WAS SET
+       if (newPasswordDemand != null) {
+           byte[] salt = PasswordUtil.generateSalt();
+           String hashedPassword = PasswordUtil.hashPassword(newPasswordDemand, salt);
+           userToBeUpdated.setHashedPassword(hashedPassword);
+           userToBeUpdated.setSalt(salt);
+           userToBeUpdated.setUsername(newNameDemand);
+       }
+
+        return User.update(userToBeUpdated);
+    }
+
+    @Override
+    public User delete(User userToDelete) {
+        return User.delete(userToDelete);
     }
 
     private static final RowMapper<User> mapUserRow = resultSet -> {

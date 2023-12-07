@@ -19,4 +19,24 @@ public class UserRegistrationRequest {
 
     private String name;
     private String password;
+
+    public String getNewNameDemand() {
+        return newNameDemand;
+    }
+
+    public void setNewNameDemand(String newNameDemand) {
+        this.newNameDemand = newNameDemand;
+    }
+
+    public String getNewPasswordDemand() {
+        return newPasswordDemand;
+    }
+
+    public void setNewPasswordDemand(String newPasswordDemand) {
+        this.newPasswordDemand = newPasswordDemand;
+    }
+
+    private String newNameDemand;
+
+    private String newPasswordDemand;
 }
