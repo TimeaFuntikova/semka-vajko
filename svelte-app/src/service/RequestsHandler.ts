@@ -65,7 +65,21 @@ export class RequestsHandler {
     console.log("User is NOT registered.");
   }
 
+  createRequestParams(
+    username: string,
+    password: string,
+    newPasswd: string,
+    newName: string,
+  ): UserRegistrationRequest {
+    return {
+      name: username,
+      password: password,
+      newPasswordDemand: newPasswd,
+      newNameDemand: newName,
+    };
+  }
   //TODO: resolve requestDataarsong on the db injection here
+
   /**
    * Fetching created user form db.
    * Sends request to server to ensure, if the user already exists.
@@ -102,20 +116,6 @@ export class RequestsHandler {
       .catch((error: Error): void => {
         console.error("Error: ", error.message);
       });
-  }
-
-  createRequestParams(
-    username: string,
-    password: string,
-    newPasswd: string,
-    newName: string,
-  ): UserRegistrationRequest {
-    return {
-      name: username,
-      password: password,
-      newPasswordDemand: newPasswd,
-      newNameDemand: newName,
-    };
   }
 
   //TODO: delete console logs from debud due to safety reasons...
