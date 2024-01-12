@@ -1,6 +1,5 @@
 <script lang="ts">
-    import { onMount } from 'svelte';
-    import MainPage from "./components/pages/main.svelte";
+    import MainPage from "./components/pages/mainPage/main.svelte";
     import StudentPage from "./components/pages/student.svelte";
     import TeacherPage from "./components/pages/teacher.svelte";
     import AboutPage from "./components/pages/about.svelte";
@@ -16,11 +15,11 @@
     $: console.dir(selectedPage);
 </script>
 
-<button on:click={() => loadPage(MainPage)}>Main</button>
+<!--<button on:click={() => loadPage(MainPage)}>Main</button>
 <button on:click={() => loadPage(StudentPage)}>Student</button>
 <button on:click={() => loadPage(TeacherPage)}>Teacher</button>
 <button on:click={() => loadPage(AboutPage)}>About</button>
-
+-->
 {#if selectedPage !== null}
     {#if $isLoggedIn}
         <ProfilePage />

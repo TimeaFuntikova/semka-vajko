@@ -27,6 +27,6 @@
   "dependencies": {
     "carbon-icons-svelte": "^12.4.0",
     "express": "^4.18.2",
-    "svelte-routing": "^2.5.0"
+    "svelte-routing": "^2.11.0"
   }
 }

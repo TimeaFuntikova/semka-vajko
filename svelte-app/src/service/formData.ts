@@ -3,7 +3,6 @@ export class FormData {
   password: string = "";
   newUsername: string = "";
   newPassword: string = "";
-
   getNewUsername(): string {
     return this.newUsername;
   }

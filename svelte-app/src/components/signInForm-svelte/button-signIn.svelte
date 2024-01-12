@@ -8,11 +8,13 @@
 
     async function handleClick(e): Promise<void> {
         try {
-            //input valid
-            const obtainedUsers: Promise<string> = await AppModel.service.handler.sendRequestGetAllUsers();
-            await AppModel.service.handler.setAllUsers(obtainedUsers);
+            if(AppModel.service.formDataHandler.getUsername() !== "") {
+                const obtainedUsers: string = await AppModel.service.handler.sendRequestGetAllUsers();
+                await AppModel.service.handler.setAllUsers(obtainedUsers);
+            }
             await AppModel.service.handler.isRegistered() ? await AppModel.service.handler.loggedIn() : AppModel.service.handler.unregisteredUser();
-        } catch (error) {
+        }
+        catch (error) {
             console.error("Error: ", error);
         }
     }
