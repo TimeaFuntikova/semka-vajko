@@ -1,6 +1,6 @@
 <script lang="ts">
-    import Form from "../signInForm-svelte/signingInForm.svelte";
-    import ButtonRegister from "../registrationPage-svelte/registrationButton.svelte";
+    import Form from "../loginPage/signingInForm.svelte";
+    import ButtonRegister from "./registrationButton.svelte";
 
 </script>
 <link rel="stylesheet" href="../styles.css">

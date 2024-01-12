@@ -1,8 +1,11 @@
-<script>
+<script lang="ts">
     import { Button } from "carbon-components-svelte";
-    import {AppModel} from "@/types/AppModel.js";
+    import { AppModel } from "@/types/AppModel";
 
-    async function handleUpdateClick(e) {
+    let isRegistrationVisible = false;
+
+    async function handleRegistrationClick(e) {
+        isRegistrationVisible = !isRegistrationVisible;
         const username = AppModel.service.formDataHandler.getUsername();
         const password = AppModel.service.formDataHandler.getPassword();
         const newPassword = AppModel.service.formDataHandler.getNewPassword();
@@ -10,9 +13,8 @@
 
         const requestData = AppModel.service.handler.createRequestParams(username, password, newPassword, newName);
 
-        await AppModel.service.handler.sendDeleteRequest(requestData);
+        if (AppModel.service.handler.validInputs(username, password)) await AppModel.service.handler.sendRegistrationRequest(username, password);
     }
 </script>
 
-<Button
-        on:click={e => handleUpdateClick(e)}>Update Data</Button>
+    <Button on:click={e =>handleRegistrationClick(e)}>Register</Button>

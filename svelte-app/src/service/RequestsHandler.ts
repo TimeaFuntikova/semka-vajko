@@ -27,10 +27,8 @@ export class RequestsHandler {
     );
   }
 
-  validInputs(): boolean {
-    const username: string = AppModel.service.formDataHandler.getUsername();
-    const password: string = AppModel.service.formDataHandler.getPassword();
-    return username != "" && password != "";
+  validInputs(username: string, password: string): boolean {
+    return (username != "" && password != "") || username != "";
   }
 
   private async parseUserFromString(obtainedUsers: string): Promise<User[]> {
@@ -41,12 +39,13 @@ export class RequestsHandler {
       return [];
     }
   }
-  async isRegistered(): Promise<boolean> {
-    const obtainedUsers: string = AppModel.service.handler.getAllUsers();
+  async isRegistered(
+    username: string,
+    obtainedUsers: string,
+  ): Promise<boolean> {
     const userObjects: User[] = await this.parseUserFromString(obtainedUsers);
 
     if (userObjects) {
-      const username: string = AppModel.service.formDataHandler.getUsername();
       for (const user of userObjects) {
         if (user.username === username) return true;
       }
@@ -54,29 +53,29 @@ export class RequestsHandler {
     return false;
   }
 
-  async loggedIn(): Promise<void> {
-    await this.sendVerifyRequest();
+  //TODO: change params over the database injection input on backend and reconsider te use of this fnction..
+  async loggedIn(requestData: UserRegistrationRequest): Promise<void> {
+    await this.sendVerifyRequest(requestData);
     isLoggedIn.set(true);
     console.log("User has been logged in.");
   }
 
   unregisteredUser(): void {
-    //TODO: create notification and provide registration form.(pehraps via reactive storage value).
+    //TODO: create notification and provide registration form.(perhaps via reactive storage value).
     console.log("User is NOT registered.");
   }
 
+  //TODO: resolve requestDataarsong on the db injection here
   /**
    * Fetching created user form db.
    * Sends request to server to ensure, if the user already exists.
    * If he does not, a new user in the database is created and returned for the user as notification.
    */
-  async sendRegistrationRequest(): Promise<void> {
-    const requestData: { name: string; password: string } = {
-      name: AppModel.service.formDataHandler.getUsername(),
-      password: AppModel.service.formDataHandler.getPassword(),
-    };
-
+  async sendRegistrationRequest(
+    requestData: UserRegistrationRequest,
+  ): Promise<void> {
     console.log(requestData);
+
     fetch("http://localhost:8080/api/createUser", {
       method: "POST",
       headers: {
@@ -105,16 +104,26 @@ export class RequestsHandler {
       });
   }
 
+  createRequestParams(
+    username: string,
+    password: string,
+    newPasswd: string,
+    newName: string,
+  ): UserRegistrationRequest {
+    return {
+      name: username,
+      password: password,
+      newPasswordDemand: newPasswd,
+      newNameDemand: newName,
+    };
+  }
+
+  //TODO: delete console logs from debud due to safety reasons...
   /**
    * Checks if the login is successful.
    */
-  async sendVerifyRequest(): Promise<void> {
-    const requestData: UserRegistrationRequest = {
-      name: AppModel.service.formDataHandler.getUsername(),
-      password: AppModel.service.formDataHandler.getPassword(),
-      newPasswordDemand: "",
-      newNameDemand: "",
-    };
+  async sendVerifyRequest(requestData: UserRegistrationRequest): Promise<void> {
+    console.log(requestData);
 
     fetch("http://localhost:8080/api/verify", {
       method: "POST",
@@ -144,7 +153,7 @@ export class RequestsHandler {
   /**
    * This request should decide whether a user already exists in the database.
    * If not-> should redirect to register form and THEN should create the user in db
-   * If already does -> should redirect to login landing page.
+   * If already does -> should redirect to log in landing page.
    */
   //TODO: redirecting to sites depending on the login status.
   async sendRequestGetAllUsers(): Promise<string> {
@@ -166,14 +175,8 @@ export class RequestsHandler {
     }
   }
 
-  async sendUpdateRequest(): Promise<void> {
-    const requestData: UserRegistrationRequest = {
-      name: AppModel.service.formDataHandler.getUsername(),
-      password: AppModel.service.formDataHandler.getPassword(),
-      newNameDemand: AppModel.service.formDataHandler.getNewUsername(),
-      newPasswordDemand: AppModel.service.formDataHandler.getNewPassword(),
-    };
-
+  //TODO: look for the data input on database as injection parameter here as well
+  async sendUpdateRequest(requestData: UserRegistrationRequest): Promise<void> {
     console.log(requestData);
 
     const response: Response = await fetch(
@@ -204,14 +207,7 @@ export class RequestsHandler {
       });
   }
 
-  async sendDeleteRequest(): Promise<void> {
-    const requestData: UserRegistrationRequest = {
-      name: AppModel.service.formDataHandler.getUsername(),
-      password: AppModel.service.formDataHandler.getPassword(),
-      newNameDemand: AppModel.service.formDataHandler.getNewUsername(),
-      newPasswordDemand: AppModel.service.formDataHandler.getNewPassword(),
-    };
-
+  async sendDeleteRequest(requestData: UserRegistrationRequest): Promise<void> {
     console.log(requestData);
 
     const response: Response = await fetch(
