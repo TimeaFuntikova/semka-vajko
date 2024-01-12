@@ -3,7 +3,6 @@
     import LoginPage from './components/pages/loginPage/loginPage.svelte';
 
     let currentPage = MainPage;
-
     function navigateTo(page: any): void {
         currentPage = page;
     }

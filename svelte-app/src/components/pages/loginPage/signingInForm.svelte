@@ -12,12 +12,13 @@
     isPasswordValid.set(false);
 
     function handleInput(password: string): boolean {
-        if (AppModel.service.handler.isPasswordValid(password)) {
+        if (AppModel.service?.handler.isPasswordValid(password)) {
             isPasswordValid.set(true);
             AppModel.service.formDataHandler.storeUsername(username);
             AppModel.service.formDataHandler.storePassword(password);
             return true;
         }
+        return false;
     }
 </script>
 
