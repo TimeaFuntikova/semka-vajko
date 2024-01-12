@@ -1,34 +1,22 @@
 <script lang="ts">
-    import MainPage from "./components/pages/mainPage/main.svelte";
-    import StudentPage from "./components/pages/student.svelte";
-    import TeacherPage from "./components/pages/teacher.svelte";
-    import AboutPage from "./components/pages/about.svelte";
-    import ProfilePage from "./components/pages/profile.svelte";
-    import { isLoggedIn } from "@/storage/form.storage";
+    import MainPage from './components/pages/Homepage/Homepage.svelte';
+    import LoginPage from './components/pages/loginPage/loginPage.svelte';
 
-    let selectedPage = MainPage;
+    let currentPage = MainPage;
 
-    function loadPage(component) {
-        selectedPage = component;
+    function navigateTo(page: any): void {
+        currentPage = page;
     }
 
-    $: console.dir(selectedPage);
+    $: console.dir(currentPage);
 </script>
 
-<!--<button on:click={() => loadPage(MainPage)}>Main</button>
-<button on:click={() => loadPage(StudentPage)}>Student</button>
-<button on:click={() => loadPage(TeacherPage)}>Teacher</button>
-<button on:click={() => loadPage(AboutPage)}>About</button>
--->
-{#if selectedPage !== null}
-    {#if $isLoggedIn}
-        <ProfilePage />
-    {:else}
-        <svelte:component this={selectedPage} />
-    {/if}
-{/if}
+<svelte:component this={currentPage} {navigateTo} />
 
-    <style>
+<button on:click={() => navigateTo(MainPage)}>Main</button>
+<button on:click={() => navigateTo(LoginPage)}>Log in</button>
+
+<style>
     button {
     background-color: #555;
     color: white;
