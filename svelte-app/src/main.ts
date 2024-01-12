@@ -11,9 +11,12 @@ const app = new App({
   },
 });
 
-const formDataHandler = new FormData();
-const requestsHandler = new RequestsHandler();
-const appServices = new AppServices(requestsHandler, formDataHandler);
+const formDataHandler: FormData = new FormData();
+const requestsHandler: RequestsHandler = new RequestsHandler();
+const appServices: AppServices = new AppServices(
+  requestsHandler,
+  formDataHandler,
+);
 new AppModel(appServices);
 
 export default app;
