@@ -1,7 +1,7 @@
 <script lang="ts">
-    import Form from "../signInForm-svelte/signingInForm.svelte";
-    import Button from "../signInForm-svelte/button-signIn.svelte";
-    import LoginButton from "./mainPage/loginButton.svelte";
+    import Form from "../loginPage/signingInForm.svelte";
+    import Button from "../loginPage/button-signIn.svelte";
+    import LoginButton from "../loginPage/loginButton.svelte";
 </script>
 
 <head>
@@ -37,6 +37,3 @@
 <footer>
     <p>&copy; 2023 Online Learning Management System</p>
 </footer>
-
-
-

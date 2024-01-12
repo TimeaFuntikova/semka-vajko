@@ -1,11 +1,16 @@
 <script lang="ts">
-    import Form from "../../signInForm-svelte/signingInForm.svelte";
-    import Button from "../../signInForm-svelte/button-signIn.svelte";
+    import Form from '../loginPage/signingInForm.svelte';
+    import Button from '../loginPage/button-signIn.svelte';
     import Pagination from "../../pagination.svelte";
     import EnglishCourse from "../../englishPic.svelte";
-    import LoginButton from "./loginButton.svelte";
-</script>
+    import LoginPage from '../../pages/loginPage/loginPage.svelte';
 
+    export let navigateTo;
+    function handleButtonClick() {
+        navigateTo(LoginPage);
+    }
+
+</script>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -13,15 +18,14 @@
 </head>
 
 <div class="login-container">
-    <LoginButton/>
     <button class="login-button">Login</button>
+    <button on:click={handleButtonClick}>Login</button>
     <button class="signup-button">Sign Up</button>
 </div>
 
 <header class="fadeIn">
     <h1>Welcome to the Online Learning Platform</h1>
 </header>
-
 <nav>
     <ul>
         <li><a href="#">About</a></li>
