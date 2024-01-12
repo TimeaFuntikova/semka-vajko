@@ -10,10 +10,9 @@
         const password = AppModel.service.formDataHandler.getPassword();
         const newPassword = AppModel.service.formDataHandler.getNewPassword();
         const newName = AppModel.service.formDataHandler.getNewUsername();
-
         const requestData = AppModel.service.handler.createRequestParams(username, password, newPassword, newName);
 
-        if (AppModel.service.handler.validInputs(username, password)) await AppModel.service.handler.sendRegistrationRequest(username, password);
+        if (AppModel.service.handler.validInputs(requestData.name, requestData.password)) await AppModel.service.handler.sendRegistrationRequest(requestData);
     }
 </script>
 
