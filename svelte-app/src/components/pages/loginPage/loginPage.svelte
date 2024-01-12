@@ -1,7 +1,17 @@
 <script lang="ts">
     import Form from "../loginPage/signingInForm.svelte";
     import Button from "../loginPage/button-signIn.svelte";
-    import LoginButton from "../loginPage/loginButton.svelte";
+    import LoginPage from '../../pages/loginPage/loginPage.svelte';
+    import RegistrationPage from '../../pages/registrationPage/registrationPage.svelte';
+
+    export let navigateTo;
+    function handleLoginButtonClick() {
+        navigateTo(LoginPage);
+    }
+    function handleRegButtonClick() {
+        navigateTo(RegistrationPage);
+    }
+
 </script>
 
 <head>
@@ -11,10 +21,13 @@
 </head>
 
 <div class="login-container">
-    <LoginButton/>
-    <button class="login-button">Login</button>
-    <button class="signup-button">Sign Up</button>
+    <button class="login-button" on:click={handleLoginButtonClick}>Login</button>
+    <button class="signup-button" on:click={handleRegButtonClick}>Sign Up</button>
 </div>
+
+<header class="fadeIn">
+    <h1>Log in</h1>
+</header>
 
 <nav>
     <ul>
