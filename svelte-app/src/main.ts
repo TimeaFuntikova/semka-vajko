@@ -3,6 +3,7 @@ import { AppModel } from "@/types/AppModel";
 import { AppServices } from "@/types/AppServices";
 import { RequestsHandler } from "@/service/RequestsHandler";
 import { FormData } from "@/service/formData";
+import "carbon-components/css/carbon-components.min.css";
 
 const app = new App({
   target: document.body,

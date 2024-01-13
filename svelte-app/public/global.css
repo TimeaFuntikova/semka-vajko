@@ -14,14 +14,21 @@ body {
 	padding: 0;
 }
 
-.login-container,
-.signup-container {
+body .login-container,
+body .signup-container {
 	background-color: #5C6DDB;
 	text-align: right;
 	padding: 10px;
+	display: flex;
+	align-items: center;
+	justify-content: flex-end;
 }
 
-.login-button {
+.search-bar {
+	margin-right: auto;
+}
+
+.login-button, .signup-button {
 	padding: 8px 16px;
 	font-size: 14px;
 	color: white;
@@ -29,28 +36,47 @@ body {
 	border: none;
 	border-radius: 4px;
 	cursor: pointer;
+	margin-left: 10px;
 }
 
 .signup-button {
-	padding: 8px 16px;
-	font-size: 14px;
-	color: white;
 	background-color: #B286DB;
-	border: none;
-	border-radius: 4px;
-	cursor: pointer;
 }
 
 .login-button:hover, .signup-button:hover {
 	background-color: #745CDB;
 }
 
-header {
-	background-color:#C1D5DB;
+body .image-container {
+	position: relative;
+	text-align: center;
+	color: white;
+}
+
+body .welcome-header {
+	background-size: cover;
+	background-position: center;
 	color: white;
 	text-align: center;
+	padding: 200px 20px;
+}
+
+body .centered-text {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	font-size: 24px;
+	color: #FFF;
+	font-weight: bold;
+}
+
+body header {
+	color: white;
+	padding: 200px 20px;
+	background-color:#C1D5DB;
+	text-align: center;
 	font-size: 2.5rem;
-	padding: 200px;
 	opacity: 0;
 	transform: translateY(20px);
 	animation: fadeInUp 1.5s ease-out forwards;
@@ -68,90 +94,123 @@ header {
 	}
 }
 
-
-nav {
-	background-color: #333;
-	color: white;
-	padding: 10px;
+body nav {
+	background-color: #ffffff;
+	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+	color: #333333;
+	padding: 10px 20px;
+	position: sticky;
+	top: 0;
+	z-index: 1000;
 }
 
-nav ul {
+body nav ul {
 	list-style: none;
 	text-align: center;
+	margin: 0;
+	padding: 0;
+	display: flex;
+	justify-content: center;
 }
 
-nav li {
-	display: inline;
-	margin-right: 20px;
-}
-nav li a {
-	padding: 14px 16px;
+body nav li {
+	margin: 0 15px;
+	position: relative;
 }
 
-nav li a:hover {
-	background-color: #111;
-}
-
-
-nav a {
+body nav a {
 	text-decoration: none;
-	color: white;
+	color: #333333;
+	padding: 8px 10px;
+	transition: all 0.3s ease;
+	position: relative;
 }
 
-main {
-	-ms-flex: 70%;
-	flex: 70%;
+body nav a:hover {
+	color: #5C6DDB;
+	background-color: #f0f0f0;
+}
+
+@media (max-width: 768px) {
+	nav ul {
+		padding-top: 10px;
+	}
+
+	nav li {
+		display: block;
+		margin: 10px 0;
+	}
+}
+
+body main {
 	max-width: 1200px;
 	margin: 0 auto;
 	padding: 20px;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
 }
 
-.main {
+body .main {
 	-ms-flex: 80%;
 	flex: 80%;
 	max-width: 1200px;
 	padding: 20px;
 }
 
-.side {
+body .side {
 	-ms-flex: 20%;
 	flex: 20%;
 	padding: 20px;
 }
 
-.row {
-	display: -ms-flexbox; /* IE10 */
+body .row {
 	display: flex;
-	-ms-flex-wrap: wrap;
 	flex-wrap: wrap;
-
 }
 
-.course-card {
+body .course-card {
 	background-color: #fff;
 	padding: 20px;
-	box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 	margin: 20px;
 	text-align: center;
+	border-radius: 8px;
+	overflow: hidden;
+	transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
-.course-card img {
+body .course-card:hover {
+	transform: translateY(-10px) scale(1.05);
+	box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2);
+}
+
+
+body .course-card img {
 	max-width: 100%;
-	border: 1px solid #ddd;
-	border-radius: 4px;
+	border-bottom: 1px solid #ddd;
+	border-top-left-radius: 8px;
+	border-top-right-radius: 8px;
 }
 
-.course-card h3 {
+body .course-card h3 {
 	margin: 15px 0;
 	font-size: 24px;
 	color: #333;
 }
 
-.course-card p {
+body .course-card p {
 	color: #666;
 }
 
-.course-list li {
+
+@media (max-width: 768px) {
+	.course-card {
+		margin: 20px 10px;
+	}
+}
+
+body .course-list li {
 	background-color: #fff;
 	padding: 20px;
 	box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
@@ -159,13 +218,13 @@ main {
 	text-align: center;
 }
 
-.course-list h3 {
+body .course-list h3 {
 	margin: 15px 0;
 	font-size: 24px;
 	color: #333;
 }
 
-.go-to-course {
+body .go-to-course {
 	display: inline-block;
 	padding: 10px 20px;
 	background-color: #007acc;
@@ -176,7 +235,7 @@ main {
 	transition: background-color 0.3s ease;
 }
 
-.go-to-course:hover {
+body .go-to-course:hover {
 	background-color: #005ba1;
 }
 
@@ -244,9 +303,60 @@ main {
 	background-color: #005ba1;
 }
 
-footer {
+body footer {
 	background-color: #333;
 	color: white;
 	text-align: center;
-	padding: 10px;
+	padding: 20px;
+	margin-top: 20px;
+}
+
+.slideshow-container {
+	max-width: 1000px;
+	position: relative;
+	margin: auto;
+}
+
+
+.prev, .next {
+	cursor: pointer;
+	position: absolute;
+	top: 50%;
+	width: auto;
+	padding: 16px;
+	margin-top: -22px;
+	color: white;
+	font-weight: bold;
+	font-size: 18px;
+	transition: 0.6s ease;
+	border-radius: 0 3px 3px 0;
+	user-select: none;
+}
+
+.next {
+	right: 0;
+	border-radius: 3px 0 0 3px;
+}
+
+.prev:hover, .next:hover {
+	background-color: rgba(0,0,0,0.8);
+}
+
+.dot {
+	cursor: pointer;
+	height: 15px;
+	width: 15px;
+	margin: 0 2px;
+	background-color: #bbb;
+	border-radius: 50%;
+	display: inline-block;
+	transition: background-color 0.6s ease;
+}
+
+.active, .dot:hover {
+	background-color: #717171;
+}
+
+@media screen and (max-width: 300px) {
+	.prev, .next, .text {font-size: 11px}
 }

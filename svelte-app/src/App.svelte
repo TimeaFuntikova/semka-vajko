@@ -1,6 +1,9 @@
 <script lang="ts">
     import MainPage from './components/pages/Homepage/Homepage.svelte';
-    import LoginPage from './components/pages/loginPage/loginPage.svelte';
+    import 'carbon-components/css/carbon-components.min.css';
+    import LoginPage from '../src/components/pages/loginPage/loginPage.svelte';
+    import RegistrationPage from '../src/components/pages/loginPage/loginPage.svelte';
+    import Search from '../src/components/search.svelte';
 
     //TODO: make a type for pages - detail
     let currentPage: any = MainPage;
@@ -8,7 +11,6 @@
         currentPage = page;
         const pageIdentifier = page === MainPage ? 'main' : 'login';
         window.history.pushState({ page: pageIdentifier }, '', `#${pageIdentifier}`);
-
     }
 
     window.onpopstate = function(event) {
@@ -19,19 +21,26 @@
         }
     };
 
-
     function initializePage() {
         const hash = window.location.hash.replace('#', '');
         currentPage = hash === 'login' ? LoginPage : MainPage;
     }
 
     initializePage();
-
-
     $: console.dir(currentPage);
-</script>
 
+    function handleLoginButtonClick() {
+        navigateTo(LoginPage);
+    }
+    function handleRegButtonClick() {
+        navigateTo(RegistrationPage);
+    }
+
+</script>
 <svelte:component this={currentPage} {navigateTo} />
+<footer>
+    <p>&copy; 2023 Online Learning Management System</p>
+</footer>
 
 <style>
     button {

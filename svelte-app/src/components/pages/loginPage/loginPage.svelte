@@ -3,6 +3,7 @@
     import Button from "../loginPage/button-signIn.svelte";
     import LoginPage from '../../pages/loginPage/loginPage.svelte';
     import RegistrationPage from '../../pages/registrationPage/registrationPage.svelte';
+    import Search from "../../search.svelte";
 
     export let navigateTo;
     function handleLoginButtonClick() {
@@ -11,7 +12,6 @@
     function handleRegButtonClick() {
         navigateTo(RegistrationPage);
     }
-
 </script>
 
 <head>
@@ -21,6 +21,7 @@
 </head>
 
 <div class="login-container">
+    <Search/>
     <button class="login-button" on:click={handleLoginButtonClick}>Login</button>
     <button class="signup-button" on:click={handleRegButtonClick}>Sign Up</button>
 </div>
@@ -38,15 +39,9 @@
     </ul>
 </nav>
 
-<div class="row">
     <div class="main">
         <h2>Sign in</h2>
-        <h5>You need to be signed in to browse your courses and assignments</h5>
+        <h4>You need to be signed in to browse your courses and assignments</h4>
         <Form/>
         <Button/>
     </div>
-</div>
-
-<footer>
-    <p>&copy; 2023 Online Learning Management System</p>
-</footer>
