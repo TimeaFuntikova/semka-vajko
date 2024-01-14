@@ -7,7 +7,6 @@ import css from "rollup-plugin-css-only";
 import url from "rollup-plugin-url";
 import sveltePreprocess from "svelte-preprocess";
 import typescript from "rollup-plugin-typescript2";
-import importCss from "rollup-plugin-import-css";
 
 const production = !process.env.ROLLUP_WATCH;
 
@@ -48,7 +47,6 @@ export default {
         dev: !production,
       },
     }),
-    importCss(),
     css({ output: "bundle.css" }),
     resolve({
       browser: true,

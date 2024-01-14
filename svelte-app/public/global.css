@@ -2,8 +2,13 @@
 * {
 	box-sizing: border-box;
 }
+html, body {
+	margin: 0;
+	padding: 0;
+	height: 100%;
+}
 
-body, h1, h2, ul, li {
+h1, h2, ul, li {
 	margin: 0.2em;
 	padding: 0.2em;
 }
@@ -11,19 +16,20 @@ body, h1, h2, ul, li {
 body {
 	font-family: Arial, sans-serif;
 	background-color: #C1DBD9;
-	margin: 0;
-	padding: 0;
-}
-
-body .img {
-	overflow-clip-margin: content-box;
-	overflow: clip;
+	display: flex;
+	flex-direction: column;
+	min-height: 100vh;
+	background-image: url('background.png');
+	background-size: cover;
+	background-position: center center;
+	background-repeat: no-repeat;
+	background-attachment: fixed;
 }
 
 body .login-container,
 body .signup-container {
 	background-color: #4FA8BA;
-	padding: 10px;
+	padding: 10px 20px;
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
@@ -32,14 +38,17 @@ body .signup-container {
 .logo {
 	height: 50px;
 	width: 50px;
-	margin-right: auto;
 }
-
 .search-bar {
 	margin-right: auto;
 }
 
-.login-button, .signup-button {
+.right-items {
+	display: flex;
+	align-items: center;
+}
+
+.login-button, .signup-button, .search-bar {
 	padding: 8px 16px;
 	font-size: 14px;
 	color: white;
@@ -109,9 +118,9 @@ body nav {
 	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 	color: #333333;
 	padding: 10px 20px;
-	position: sticky;
-	top: 0;
 	z-index: 1000;
+	top: 40%;
+	position: relative;
 }
 
 body nav ul {
@@ -153,8 +162,9 @@ body nav a:hover {
 }
 
 body main {
+	position: relative;
 	max-width: 1200px;
-	margin: 0 auto;
+	margin: 20px auto;
 	padding: 20px;
 	display: flex;
 	flex-direction: column;
@@ -162,9 +172,9 @@ body main {
 }
 
 body .main {
-	flex: 80%;
-	max-width: 1200px;
-	padding: 20px;
+	padding: 50px;
+	text-align: center;
+	margin-top: 400px;
 }
 
 body .side {
@@ -174,19 +184,34 @@ body .side {
 }
 
 body .row {
-	display: flex;
-	flex-wrap: wrap;
+	display: grid;
+	grid-template-columns: repeat(3, 1fr);
+	gap: 20px;
+}
+
+@media (max-width: 768px) {
+	.row {
+		grid-template-columns: 1fr; /* Full width on smaller screens */
+	}
 }
 
 body .course-card {
+	flex: 1 1 30%;
+	margin: 10px;
+	box-sizing: border-box;
 	background-color: #fff;
 	padding: 20px;
 	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-	margin: 20px;
 	text-align: center;
 	border-radius: 8px;
 	overflow: hidden;
 	transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+@media (max-width: 768px) {
+	.course-card {
+		flex-basis: 100%;
+	}
 }
 
 body .course-card:hover {
@@ -195,7 +220,7 @@ body .course-card:hover {
 }
 
 
-body .course-card img {
+.course-card img {
 	max-width: 100%;
 	border-bottom: 1px solid #ddd;
 	border-top-left-radius: 8px;
@@ -312,14 +337,6 @@ body .go-to-course:hover {
 	background-color: #005ba1;
 }
 
-body footer {
-	background-color: #333;
-	color: white;
-	text-align: center;
-	padding: 20px;
-	margin-top: 20px;
-}
-
 .slideshow-container {
 	max-width: 1000px;
 	position: relative;
@@ -368,4 +385,19 @@ body footer {
 
 @media screen and (max-width: 300px) {
 	.prev, .next, .text {font-size: 11px}
+}
+
+body .content {
+	flex: 1;
+}
+
+footer {
+	background-color: #333;
+	color: white;
+	text-align: center;
+	position: fixed;
+	padding: 20px;
+	left: 0;
+	bottom: 0;
+	width: 100%;
 }

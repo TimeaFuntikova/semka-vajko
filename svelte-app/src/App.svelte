@@ -6,6 +6,8 @@
     import AboutPage from '../src/components/pages/aboutPage/about.svelte';
     import CoursesPage from '../src/components/pages/coursesPage/courses.svelte';
     import ContactPage from '../src/components/pages/contactPage/contact.svelte';
+    import ProfilePage from '../src/components/pages/profilePage/profile.svelte';
+    import CourseDescriptionPage from '../src/components/pages/coursesPage/courseManagement.svelte'; //TODO: opravit import
 
     let currentPage: any = MainPage;
 
@@ -25,6 +27,10 @@
             pageIdentifier = 'courses';
         } else if (page === ContactPage) {
             pageIdentifier = 'contact';
+        } else if (page === ProfilePage) {
+            pageIdentifier = 'profile';
+        } else if (page === CourseDescriptionPage) {
+            pageIdentifier = 'courseDescription';
         }
         window.history.pushState({ page: pageIdentifier }, '', `#${pageIdentifier}`);
     }
@@ -46,6 +52,12 @@
                     break;
                 case 'contact':
                     currentPage = ContactPage;
+                    break;
+                case 'profile':
+                    currentPage = ProfilePage;
+                    break;
+                case 'courseDescription':
+                    currentPage = CourseDescriptionPage;
                     break;
                 default:
                     currentPage = MainPage;
@@ -73,6 +85,12 @@
             case 'contact':
                 currentPage = ContactPage;
                 break;
+            case 'profile':
+                currentPage = ProfilePage;
+                break;
+            case 'courseDescription':
+                currentPage = CourseDescriptionPage;
+                break;
             default:
                 currentPage = MainPage;
         }
@@ -80,48 +98,29 @@
     initializePage();
     $: console.dir(currentPage);
 
-    function handleLoginButtonClick(event) {
+    function handleClick(event, page) {
         event.preventDefault();
-        navigateTo(LoginPage);
-    }
-    function handleRegButtonClick(event) {
-        event.preventDefault();
-        navigateTo(RegistrationPage);
-    }
-
-    function handleAboutClick(event) {
-        event.preventDefault();
-        navigateTo(AboutPage);
-    }
-
-    function handleCoursesClick(event) {
-        event.preventDefault();
-        navigateTo(CoursesPage);
-    }
-
-    function handleContactClick(event) {
-        event.preventDefault();
-        navigateTo(ContactPage);
+        navigateTo(page);
     }
 </script>
 
 <div class="login-container">
     <a href="#"><img src="../logoForThePlaform.png" alt="Logo" class="logo"/></a>
-    <Search/>
-    <button class="login-button" on:click={event => handleLoginButtonClick(event)}>Login</button>
-    <button class="signup-button" on:click={event => handleRegButtonClick(event)}>Sign Up</button>
+        <div class="right-items">
+            <Search/>
+            <button class="login-button" on:click={event => handleClick(event, LoginPage)}>Login</button>
+            <button class="signup-button" on:click={event => handleClick(event, RegistrationPage)}>Sign Up</button>
+        </div>
 </div>
-
-<header class="fadeIn welcome-header">
-    <h1>Welcome to the Online Learning Platform</h1>
-</header>
 
 <nav>
     <ul>
-        <li><a href="#about" on:click={event => handleAboutClick(event)}>About</a></li>
-        <li><a href="#courses" on:click={event => handleCoursesClick(event)}>Courses</a></li>
-        <li><a href="#contact" on:click={event => handleContactClick(event)}>Contact</a></li>
-        <li><a href="#login" on:click={event => handleLoginButtonClick(event)}>Login</a></li>
+        <li><a href="#about" on:click={event => handleClick(event, AboutPage)}>About</a></li>
+        <li><a href="#courses" on:click={event => handleClick(event, CoursesPage)}>Courses</a></li>
+        <li><a href="#contact" on:click={event => handleClick(event, ContactPage)}>Contact</a></li>
+        <li><a href="#login" on:click={event => handleClick(event, LoginPage)}>Login</a></li>
+        <li><a href="#profile" on:click={event => handleClick(event, ProfilePage)}>Profile(#debug)</a></li>
+        <li><a href="#courseDescription" on:click={event => handleClick(event, CourseDescriptionPage)}>CourseDesc(#debug)</a></li>
     </ul>
 </nav>
 

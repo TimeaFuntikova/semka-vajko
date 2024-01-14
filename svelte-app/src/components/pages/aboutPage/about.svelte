@@ -1,5 +1,14 @@
- <div class="course-card">
-        <h3>ABOUT ...</h3>
-        <p>Short description goes here.</p>
-        <a href="#">Learn More</a>
-    </div>
+<div class="main">
+    <img src="../logoForThePlaform.png" height="500" width="500"/>
+    <br>
+    <h2 style="margin: 50px">ABOUT ...</h2>
+    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. In pharetra lacus id augue rhoncus fermentum. Pellentesque aliquet posuere egestas. In ac sagittis libero. Sed bibendum mi sit amet sagittis ultricies. Maecenas quam libero, feugiat at velit eu, fermentum sodales sapien. Sed et pellentesque metus. Ut feugiat libero vitae diam aliquet, in bibendum nisi molestie. Quisque dignissim viverra ante. Donec dui nisl, semper nec arcu et, ornare fermentum enim.
+
+        Quisque ornare neque et risus vulputate, id dictum nunc pellentesque. Donec mattis rhoncus consectetur. Vestibulum sit amet enim ornare nisl pellentesque bibendum tempus et sapien. Praesent ultricies metus sit amet molestie pharetra. Duis luctus purus lobortis consectetur dignissim. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. In hac habitasse platea dictumst. Pellentesque vitae ullamcorper tortor, eu commodo ante. Duis aliquam tortor vel ante faucibus, sit amet congue enim dignissim. Nulla facilisi. Aliquam ac risus a ante egestas pulvinar nec et quam. Nulla facilisi.
+
+        In volutpat maximus felis vitae volutpat. Nam pretium sollicitudin nisi, ac ornare turpis pulvinar sit amet. Integer ornare cursus ultricies. Donec nec leo bibendum mauris convallis imperdiet. In finibus eros vel euismod facilisis. Aliquam eget porttitor sapien. Quisque vestibulum sem eget dui sagittis, sed molestie quam efficitur. Cras consectetur commodo nisl, ac sodales felis pharetra quis.
+
+        Morbi accumsan orci vitae justo pharetra mattis. Donec condimentum velit id dapibus bibendum. Cras vitae tellus porta, laoreet nibh vel, maximus lectus. Suspendisse sodales ligula at sapien eleifend, a porttitor leo sollicitudin. Sed laoreet, massa ut consectetur fringilla, neque turpis egestas nulla, id varius libero urna eget dolor. Suspendisse vitae ex lectus. Aliquam ut orci iaculis, bibendum orci ut, egestas sapien. Suspendisse id lacus at quam pharetra sagittis quis sit amet sem. In lacinia placerat ultricies. In sit amet laoreet odio. Sed congue nec neque vitae scelerisque. Curabitur gravida elit sit amet nisl volutpat varius.
+
+        Nullam ultricies sodales neque, quis consequat nulla eleifend id. Duis convallis nibh augue, sed posuere massa suscipit vel. Nam odio augue, pretium in nisl nec, consequat euismod velit. Morbi bibendum maximus ante et feugiat. Nunc commodo id quam et viverra. Integer eu ex diam. Phasellus pulvinar enim leo, non scelerisque ligula feugiat ut. Nam faucibus lacinia arcu, rhoncus dictum metus ultricies gravida. Quisque eget semper enim. Aenean porta, velit a finibus tincidunt, tortor justo dictum justo, sed mattis neque dolor varius ligula. Donec sed risus et nunc sollicitudin mattis.</p>
+</div>
