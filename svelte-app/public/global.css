@@ -29,7 +29,7 @@ body .signup-container {
 	justify-content: space-between;
 }
 
-body .logo {
+.logo {
 	height: 50px;
 	width: 50px;
 	margin-right: auto;
@@ -58,18 +58,17 @@ body .logo {
 	background-color: #745CDB;
 }
 
-body .image-container {
+.image-container {
 	position: relative;
 	text-align: center;
 	color: white;
 }
 
-body .welcome-header {
-	background-size: cover;
+.welcome-header {
 	background-position: center;
 	color: white;
 	text-align: center;
-	padding: 200px 20px;
+	padding: 20px 20px;
 }
 
 body .centered-text {
