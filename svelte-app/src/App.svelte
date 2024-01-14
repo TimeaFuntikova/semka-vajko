@@ -103,12 +103,10 @@
         event.preventDefault();
         navigateTo(ContactPage);
     }
-
-
 </script>
 
 <div class="login-container">
-    <img src="../logoForThePlaform.png" alt="Logo" class="logo"/>
+    <a href="#"><img src="../logoForThePlaform.png" alt="Logo" class="logo"/></a>
     <Search/>
     <button class="login-button" on:click={event => handleLoginButtonClick(event)}>Login</button>
     <button class="signup-button" on:click={event => handleRegButtonClick(event)}>Sign Up</button>
