@@ -4,8 +4,10 @@
 </script>
 
 <div class="main">
-    <h4>You can create a new account below.</h4>
-    <br>
-    <Form/>
-    <ButtonRegister/>
+    <div class="form-container">
+        <h4>You can create a new account below.</h4>
+        <br>
+        <Form/>
+        <ButtonRegister/>
+    </div>
 </div>

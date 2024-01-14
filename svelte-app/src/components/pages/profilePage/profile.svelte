@@ -4,18 +4,20 @@
     import DeleteButton from "../../deleteButton/deleteButton.svelte";
 </script>
 
+<div class="form-container">
 <div class="main">
-
-    <h3>UPLOAD PICTURE</h3>
-    <p>Here you can update your profile picture.</p>
-
-    <h3>UPDATE DATA</h3>
-        <p>Here you can edit your username or password.</p>
-        <Form/>
-        <Button/>
-
-        <h3>DELETE ACCOUNT</h3>
-        <p>This action cannot be taken back.</p>
-        <DeleteButton/>
-
+        <h3>UPLOAD PICTURE</h3>
+        <p>Here you can update your profile picture.</p>
+    <br>  <br>
+        <h3>UPDATE DATA</h3>
+            <p>Here you can edit your username or password.</p>
+            <Form/>
+    <br>
+            <Button/>
+    <br>  <br>
+            <h3>DELETE ACCOUNT</h3>
+            <p>This action cannot be taken back.</p>
+    <br>
+            <DeleteButton/>
+    </div>
 </div>

@@ -1,6 +1,6 @@
 <div class="main">
-    <img src="../logoForThePlaform.png" height="500" width="500"/>
     <br>
+    <img src="../logoForThePlaform.png" height="400" width="400"/>
     <h2 style="margin: 50px">ABOUT ...</h2>
     <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. In pharetra lacus id augue rhoncus fermentum. Pellentesque aliquet posuere egestas. In ac sagittis libero. Sed bibendum mi sit amet sagittis ultricies. Maecenas quam libero, feugiat at velit eu, fermentum sodales sapien. Sed et pellentesque metus. Ut feugiat libero vitae diam aliquet, in bibendum nisi molestie. Quisque dignissim viverra ante. Donec dui nisl, semper nec arcu et, ornare fermentum enim.
 

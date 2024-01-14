@@ -15,4 +15,4 @@
 </script>
 
 <Button
-        on:click={e => handleUpdateClick(e)}>Update Data</Button>
+        on:click={e => handleUpdateClick(e)}>Delete Account</Button>

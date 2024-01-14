@@ -16,4 +16,4 @@
     }
 </script>
 
-    <Button on:click={e =>handleRegistrationClick(e)}>Register</Button>
+<Button on:click={e =>handleRegistrationClick(e)}>Register</Button>
