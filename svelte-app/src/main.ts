@@ -5,7 +5,7 @@ import { RequestsHandler } from "@/service/RequestsHandler";
 import { FormData } from "@/service/formData";
 import "carbon-components/css/carbon-components.min.css";
 
-const app = new App({
+const app: App = new App({
   target: document.body,
   props: {
     name: "semkaVajko",

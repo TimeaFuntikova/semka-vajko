@@ -1,3 +1,4 @@
+
 * {
 	box-sizing: border-box;
 }
@@ -14,14 +15,24 @@ body {
 	padding: 0;
 }
 
+body .img {
+	overflow-clip-margin: content-box;
+	overflow: clip;
+}
+
 body .login-container,
 body .signup-container {
-	background-color: #5C6DDB;
-	text-align: right;
+	background-color: #4FA8BA;
 	padding: 10px;
 	display: flex;
 	align-items: center;
-	justify-content: flex-end;
+	justify-content: space-between;
+}
+
+body .logo {
+	height: 50px;
+	width: 50px;
+	margin-right: auto;
 }
 
 .search-bar {
@@ -152,7 +163,6 @@ body main {
 }
 
 body .main {
-	-ms-flex: 80%;
 	flex: 80%;
 	max-width: 1200px;
 	padding: 20px;
