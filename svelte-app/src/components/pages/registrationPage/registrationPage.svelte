@@ -5,7 +5,7 @@
 
 <div class="main">
     <div class="form-container">
-        <h4>You can create a new account below.</h4>
+        <h1>You can create a new account below.</h1>
         <br>
         <Form/>
         <ButtonRegister/>

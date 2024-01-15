@@ -20,11 +20,23 @@ Toto treba ošetriť aj na databáze čo sa týka príslušnosti k modulu... ale
 
 </script>
 
-<h1> My created courses:</h1>
+
 <!-- sem naťahať dáta len taký kurzov, ktoré prislúchajú, že sú vytvorené lognutym userom, template:-->
 
-<div class="row">
-    <div class="main">
+<div class="main">
+    <h1 style="text-align: left"> My created courses:</h1>
+    <div class="row">
+        <div class="course-card">
+            <h3>{courseTitle}</h3>
+            <div>
+                <img src={courseImage} alt={`Image of ${courseTitle}`} class="course-image"/>
+            </div>
+            <p >{courseDescription}</p>
+            <a href="#">Edit</a>
+            <p> #will take the user to editing page </p>
+            <a href="#">Delete Course</a>
+            <p> #will ask the user if he really wants to delete the course. </p>
+        </div>
         <div class="course-card">
             <h3>{courseTitle}</h3>
             <div>
@@ -37,17 +49,8 @@ Toto treba ošetriť aj na databáze čo sa týka príslušnosti k modulu... ale
             <p> #will ask the user if he really wants to delete the course. </p>
         </div>
     </div>
-</div>
 
-<div class="main">
-    <Pagination/>
-</div>
-
-
-<!-- tu dat na stránku tri a v podobe pagination. / slides. s obrázkami.-->
-
-
-<h1> Forums to my courses:</h1>
+<h1 style="text-align: left"> Forums to my courses:</h1>
 
 <!-- sem zase data o prislusnych forach-->
 <div class="row">
@@ -60,3 +63,4 @@ Toto treba ošetriť aj na databáze čo sa týka príslušnosti k modulu... ale
             <a href="#">Learn More</a>
         </div>
     </div>
+</div>

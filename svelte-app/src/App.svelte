@@ -8,6 +8,7 @@
     import ContactPage from '../src/components/pages/contactPage/contact.svelte';
     import ProfilePage from '../src/components/pages/profilePage/profile.svelte';
     import CourseDescriptionPage from '../src/components/pages/coursesPage/courseManagement.svelte'; //TODO: opravit import
+    import CreateCourse from '../src/components/pages/coursesPage/createCourse.svelte';
 
     let currentPage: any = MainPage;
 
@@ -31,6 +32,8 @@
             pageIdentifier = 'profile';
         } else if (page === CourseDescriptionPage) {
             pageIdentifier = 'courseDescription';
+        } else if (page === CreateCourse) {
+            pageIdentifier = 'createCourse';
         }
         window.history.pushState({ page: pageIdentifier }, '', `#${pageIdentifier}`);
     }
@@ -58,6 +61,9 @@
                     break;
                 case 'courseDescription':
                     currentPage = CourseDescriptionPage;
+                    break;
+                case 'createCourse':
+                    currentPage = CreateCourse;
                     break;
                 default:
                     currentPage = MainPage;
@@ -91,6 +97,9 @@
             case 'courseDescription':
                 currentPage = CourseDescriptionPage;
                 break;
+            case 'createCourse':
+                currentPage = CreateCourse;
+                break;
             default:
                 currentPage = MainPage;
         }
@@ -121,6 +130,7 @@
         <li><a href="#login" on:click={event => handleClick(event, LoginPage)}>Login</a></li>
         <li><a href="#profile" on:click={event => handleClick(event, ProfilePage)}>Profile(#debug)</a></li>
         <li><a href="#courseDescription" on:click={event => handleClick(event, CourseDescriptionPage)}>CourseDesc(#debug)</a></li>
+        <li><a href="#createCourse" on:click={event => handleClick(event, CreateCourse)}>Create Course(#debug)</a></li>
     </ul>
 </nav>
 
