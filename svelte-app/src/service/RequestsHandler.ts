@@ -27,8 +27,14 @@ export class RequestsHandler {
     );
   }
 
-  validInputs(username: string, password: string): boolean {
-    return (username != "" && password != "") || username != "";
+  validInputs(username: string, password: string): string {
+    console.log("username: ", username, "password: ", password);
+    if (username == "" || !username) {
+      return "invalid_username";
+    } else if (password == "" || !password) {
+      return "invalid_password";
+    }
+    return "valid";
   }
 
   private async parseUserFromString(obtainedUsers: string): Promise<User[]> {
