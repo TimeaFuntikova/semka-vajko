@@ -12,17 +12,17 @@ public class Certificate {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "certificateId")
+    @Column(name = "certificate_id")
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "userId", nullable = false)
+    @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
     @ManyToOne
-    @JoinColumn(name = "courseId", nullable = false)
+    @JoinColumn(name = "course_id", nullable = false)
     private Course course;
 
-    @Column(name = "datePosted")
+    @Column(name = "date_posted")
     private Date dateIssued;
 }

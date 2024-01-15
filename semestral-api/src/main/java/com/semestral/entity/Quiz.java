@@ -14,11 +14,11 @@ public class Quiz {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "quizId")
+    @Column(name = "quiz_id")
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "moduleId", nullable = false)
+    @JoinColumn(name = "module_id", nullable = false)
     private Module module;
 
     @Column(name = "title", nullable = false)
@@ -27,9 +27,9 @@ public class Quiz {
     @Column(name = "description")
     private String description;
 
-    @Column(name = "totalMarks")
+    @Column(name = "total_marks")
     private Integer totalMarks;
 
-    @Column(name = "passingMarks")
+    @Column(name = "passing_marks")
     private Integer passingMarks;
 }

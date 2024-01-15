@@ -73,7 +73,7 @@ public class RootController {
     /**
      * Function to verify the successful login of a user.
      * @param registrationRequest - a structure containing info about users name and password, optionally
-     *      *                            also with new username and apssword request.
+     *      *                            also with new username and password request.
      * @return status of the request processed
      */
     @PostMapping("/verify")
@@ -108,7 +108,7 @@ public class RootController {
                 return ResponseEntity.ok(createdUser);
             } catch (RuntimeException e) {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                        .body("Username is already taken. Please choose a different username.");
+                        .body("the request was not successful.");
             }
     }
 

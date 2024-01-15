@@ -12,20 +12,20 @@ public class Post {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "postId")
+    @Column(name = "post_id")
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "forumId", nullable = false)
+    @JoinColumn(name = "forum_id", nullable = false)
     private Forum forum;
 
     @ManyToOne
-    @JoinColumn(name = "userId", nullable = false)
+    @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
     @Column(name = "content")
     private String content;
 
-    @Column(name = "datePosted")
+    @Column(name = "date_posted")
     private Date datePosted;
 }

@@ -16,23 +16,23 @@ public class Enrollment {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "enrollmentId")
+    @Column(name = "enrollment_id")
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "userId", nullable = false)
+    @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
     @ManyToOne
-    @JoinColumn(name = "courseId", nullable = false)
+    @JoinColumn(name = "course_id", nullable = false)
     private Course course;
 
-    @Column(name = "enrollmentDate")
+    @Column(name = "enrollment_date")
     private Date enrollmentDate;
 
     @Column(name = "progress")
     private Integer progress;
 
-    @Column(name = "completionStatus")
+    @Column(name = "completion_status")
     private String completionStatus;
 }

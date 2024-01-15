@@ -13,7 +13,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public boolean isUsernameTaken(String username) {
-        String query = "SELECT COUNT(*) FROM users WHERE username = ?";
+        String query = "SELECT COUNT(*) FROM app_user WHERE username = ?";
         List<Boolean> result = DatabaseUtil.executeQuery(DatabaseUtil.getConnection(), query,
                 resultSet -> resultSet.getInt(1) > 0, username);
 
@@ -36,21 +36,21 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<User> getAllUsers() {
-        String query = "SELECT * FROM users";
+        String query = "SELECT * FROM app_user";
         return DatabaseUtil.executeQuery(DatabaseUtil.getConnection(),query, mapUserRow);
     }
 
     @Override
     public User getUserByUsername(String username) {
-        String query = "SELECT * FROM users WHERE username = ?";
+        String query = "SELECT * FROM app_user WHERE username = ?";
         return DatabaseUtil.executeQuery(DatabaseUtil.getConnection(), query, mapUserRow, username).stream().findFirst().orElse(null);
     }
 
     /**
      * Retrieves firstly the instance of user from the database.
      * Then gets hashed password and calls the function to resolve password validity for this concrete user.
-     * @param password
-     * @param username
+     * @param password - the password provided
+     * @param username - the username provided
      * @return boolean verified login
      */
     @Override
@@ -88,7 +88,7 @@ public class UserServiceImpl implements UserService {
 
     private static final RowMapper<User> mapUserRow = resultSet -> {
         User user = new User();
-        user.setId(resultSet.getLong("id"));
+        user.setId(resultSet.getLong("user_id"));
         user.setUsername(resultSet.getString("username"));
         user.setHashedPassword(resultSet.getString("hashed_password"));
         user.setSalt(resultSet.getBytes("salt"));

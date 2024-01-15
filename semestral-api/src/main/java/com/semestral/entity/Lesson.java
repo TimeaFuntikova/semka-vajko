@@ -15,11 +15,11 @@ public class Lesson {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "lessonId")
+    @Column(name = "lesson_id")
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "moduleID", nullable = false)
+    @JoinColumn(name = "module_id", nullable = false)
     private Module module;
 
     @Column(name = "title")
@@ -31,15 +31,15 @@ public class Lesson {
     @Column(name = "videoURL")
     private String videoURL;
 
-    @Column(name = "additionalResources")
+    @Column(name = "additional_resources")
     private String additionalResources;
 
     @Column(name = "sequence")
     private Integer sequence;
 
-    @Column(name = "createdAt")
+    @Column(name = "created_at")
     private Date createdAt;
 
-    @Column(name = "updatedAt")
+    @Column(name = "updated_at")
     private Date updatedAt;
 }

@@ -14,11 +14,11 @@ public class Module {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "moduleId")
+    @Column(name = "module_id")
     private Long moduleID;
 
     @ManyToOne
-    @JoinColumn(name = "courseId", nullable = false)
+    @JoinColumn(name = "course_id", nullable = false)
     private Course course;
 
     @Column(name = "title", nullable = false)

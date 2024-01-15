@@ -21,7 +21,7 @@ public class Course {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "courseId")
+    @Column(name = "course_id")
     private Long id;
 
     @Column(name = "title", nullable = false)
@@ -39,10 +39,10 @@ public class Course {
     @Column(name = "thumbnail")
     private String thumbnail;
 
-    @Column(name = "dateCreated")
+    @Column(name = "date_created")
     private Date dateCreated;
 
-    @Column(name = "lastUpdated")
+    @Column(name = "last_updated")
     private Date lastUpdated;
 
     public void setId(Long id) {

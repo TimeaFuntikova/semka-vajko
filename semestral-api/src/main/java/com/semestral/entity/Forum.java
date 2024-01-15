@@ -10,11 +10,11 @@ public class Forum {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "forumId")
+    @Column(name = "forum_id")
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "courseId", nullable = false)
+    @JoinColumn(name = "course_id", nullable = false)
     private Course course;
 
     @Column(name = "title", nullable = false)

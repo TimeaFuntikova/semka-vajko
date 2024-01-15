@@ -1,4 +1,4 @@
-DROP TABLE IF EXISTS certificate CASCADE;
+DROP TABLE IF EXISTS app_user CASCADE;
 
 ---INSERT INTO users (username, password, hashedPassword, email, role_name)
 --VALUES ('admin', 'admin123', 'hashedAdminPassword', 'admin@example.com', 'ADMIN');
