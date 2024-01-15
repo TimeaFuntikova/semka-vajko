@@ -3,6 +3,8 @@ package com.semestral.entity;
 import com.semestral.utils.DatabaseUtil;
 import jakarta.persistence.*;
 import lombok.Data;
+
+import java.sql.Date;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -12,16 +14,19 @@ import java.util.List;
 
 @Data
 @Entity
-@Table(name = "users")
+@Table(name = "APP_USER")
 public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
+    @Column(name = "userId")
     private Long id;
 
     @Column(name = "username", nullable = false)
     private String username;
+
+    @Column(name = "profileName", nullable = false)
+    private String profileName;
 
     @Column(name = "password")
     private String password;
@@ -32,12 +37,30 @@ public class User {
     @Column(name = "salt", nullable = false)
     private byte[] salt;
 
+    @Column(name = "profilePhoto")
+    private String profilePhoto;
+
+    @Column(name = "dateJoined")
+    private Date dateJoined;
+
+    @Column(name = "lastLogin")
+    private Date lastLogin;
+
+    @Column(name = "userRole")
+    private String userRole;
+
     public void setId(Long id) {
         this.id = id;
     }
 
     public void setUsername(String name) {
         this.username = name;
+    }
+
+    public void setProfileName(String profileName) {this.profileName = profileName;}
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public void setHashedPassword(String hashedPassword) {
@@ -48,10 +71,13 @@ public class User {
         this.salt = salt;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
-    }
+    public void setProfilePhoto(String pfp) {this.profilePhoto = pfp;}
 
+    public void setDateJoined(Date dateJoined) {this.dateJoined = dateJoined;}
+
+    public void setLastLogin(Date lastLogin) {this.lastLogin = lastLogin;}
+
+    public void setUserRole(String userRole) {this.userRole = userRole;}
 
 
     public static User create(User userToBeInserted) {
@@ -95,5 +121,4 @@ public class User {
         String query = "DELETE FROM users WHERE username = ?";
         return DatabaseUtil.delete(query, userToDelete.getUsername());
     }
-
 }

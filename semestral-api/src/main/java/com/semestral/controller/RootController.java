@@ -31,11 +31,22 @@ public class RootController {
             this.userService = userService;
         }
 
+    /**
+     * Dummy get-request for obtaining the status of the successful application boot.
+     * @return String message about the server running successfully.
+     */
     @GetMapping("/status")
     public String getMessage() {
             return onlineLearningPlatformService.getMessage();
     }
 
+    /**
+     * Function for obtaining info about whether the user is registered.
+     * Obtains the data about all users in the database and by the unique name compares user registration request.
+     * @param registrationRequest - a structure containing info about users name and password, optionally
+     *                            also with new username and apssword request
+     * @return status of the request processed
+     */
     @PostMapping("/isRegistered")
     public ResponseEntity<?> isRegistered(@RequestBody UserRegistrationRequest registrationRequest) {
     String usernameFromInput = registrationRequest.getName();
@@ -45,15 +56,26 @@ public class RootController {
                    return ResponseEntity.ok(foundUser);
                }
             }
-            return null; //redirect na register
+            return null;
     }
 
+    /**
+     * Function for obtaining all the users from the database.
+     * @return allUsers (List<User>)
+     */
     @GetMapping("/getAllUsers")
     public ResponseEntity<List<User>> getAllUsers() {
        List<User> allUsers = userService.getAllUsers();
 
        return ResponseEntity.ok(allUsers);
     }
+
+    /**
+     * Function to verify the successful login of a user.
+     * @param registrationRequest - a structure containing info about users name and password, optionally
+     *      *                            also with new username and apssword request.
+     * @return status of the request processed
+     */
     @PostMapping("/verify")
     public ResponseEntity<?> verify(@RequestBody UserRegistrationRequest registrationRequest) {
            try {
@@ -69,7 +91,12 @@ public class RootController {
            }
       }
 
-
+    /**
+     * Function that creates a new user in the database system.
+     * @param registrationRequest - a structure containing info about users name and password, optionally
+     *      *                            also with new username and apssword request.
+     * @return status of the request processed
+     */
     @PostMapping("/createUser")
     public ResponseEntity<?> createUser(@RequestBody UserRegistrationRequest registrationRequest) {
             try {
@@ -84,6 +111,13 @@ public class RootController {
                         .body("Username is already taken. Please choose a different username.");
             }
     }
+
+    /**
+     * Function to update user data based on the request provided
+     * @param registrationRequest - a structure containing info about users name and password, optionally
+     *      *                            also with new username and apssword request.
+     * @return status of the request processed
+     */
     @CrossOrigin(origins = "*")
     @PutMapping("/updateUserData")
     public ResponseEntity<?> updateUserData(@RequestBody UserRegistrationRequest registrationRequest) {
@@ -102,6 +136,12 @@ public class RootController {
         }
     }
 
+    /**
+     * Function to delete a user from the database permanently.
+     * @param registrationRequest - a structure containing info about users name and password, optionally
+     *      *                            also with new username and apssword request.
+     * @return status of the request processed
+     */
     @CrossOrigin(origins = "*")
     @DeleteMapping("/deleteUser")
     public ResponseEntity<?> deleteUser(@RequestBody UserRegistrationRequest registrationRequest) {

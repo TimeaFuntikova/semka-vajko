@@ -46,6 +46,13 @@ public class UserServiceImpl implements UserService {
         return DatabaseUtil.executeQuery(DatabaseUtil.getConnection(), query, mapUserRow, username).stream().findFirst().orElse(null);
     }
 
+    /**
+     * Retrieves firstly the instance of user from the database.
+     * Then gets hashed password and calls the function to resolve password validity for this concrete user.
+     * @param password
+     * @param username
+     * @return boolean verified login
+     */
     @Override
     public boolean verify(String password, String username) {
         User retrievedUser = getUserByUsername(username);
