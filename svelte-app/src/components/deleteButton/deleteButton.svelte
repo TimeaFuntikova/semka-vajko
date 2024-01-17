@@ -14,5 +14,5 @@
     }
 </script>
 
-<Button
-        on:click={e => handleUpdateClick(e)}>Update Data</Button>
+<Button kind="danger-tertiary"
+        on:click={e => handleUpdateClick(e)}>Delete Account</Button>

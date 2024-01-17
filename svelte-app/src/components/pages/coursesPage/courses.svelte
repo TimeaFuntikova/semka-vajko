@@ -3,12 +3,11 @@
 </script>
 
 <div class="welcome-header">
-    <h1>Welcome to the Online Learning Platform!</h1>
+    <h1>Here you can browse all the available courses.</h1>
 </div>
 
 <div class="main">
-    <h1 style="text-align: center">Start learning today!</h1>
-    <h2 style="text-align: center">Choose from the available courses.</h2>
+    <h1>Ennroll for free!</h1>
     <div class="row">
         <div class="course-card">
             <h3>English Course</h3>

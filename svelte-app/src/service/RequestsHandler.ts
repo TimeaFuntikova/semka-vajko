@@ -2,7 +2,7 @@ import { AppModel } from "@/types/AppModel";
 import { UserRegistrationRequest } from "@/types/UserRegistrationRequest";
 import { Response } from "express";
 import { User } from "@/types/User";
-import { isLoggedIn } from "@/storage/form.storage";
+import { isLoggedIn, unregisteredUser } from "@/storage/form.storage";
 
 export class RequestsHandler {
   allUsersObtained: string = "";
@@ -27,8 +27,14 @@ export class RequestsHandler {
     );
   }
 
-  validInputs(username: string, password: string): boolean {
-    return (username != "" && password != "") || username != "";
+  validInputs(username: string, password: string): string {
+    console.log("username: ", username, "password: ", password);
+    if (username == "" || !username) {
+      return "invalid_username";
+    } else if (password == "" || !password) {
+      return "invalid_password";
+    }
+    return "valid";
   }
 
   private async parseUserFromString(obtainedUsers: string): Promise<User[]> {
@@ -54,14 +60,16 @@ export class RequestsHandler {
   }
 
   //TODO: change params over the database injection input on backend and reconsider te use of this fnction..
-  async loggedIn(requestData: UserRegistrationRequest): Promise<void> {
+  async loggedIn(requestData: UserRegistrationRequest): Promise<boolean> {
     await this.sendVerifyRequest(requestData);
     isLoggedIn.set(true);
     console.log("User has been logged in.");
+    return true;
   }
 
   unregisteredUser(): void {
-    //TODO: create notification and provide registration form.(perhaps via reactive storage value).
+    //TODO: better redirect.
+    unregisteredUser.set(true);
     console.log("User is NOT registered.");
   }
 
@@ -87,8 +95,10 @@ export class RequestsHandler {
    */
   async sendRegistrationRequest(
     requestData: UserRegistrationRequest,
-  ): Promise<void> {
+  ): Promise<string> {
     console.log(requestData);
+
+    let messageToReturn: string = "";
 
     fetch("http://localhost:8080/api/createUser", {
       method: "POST",
@@ -101,21 +111,24 @@ export class RequestsHandler {
         if (!response.ok) {
           try {
             const errorResponse = await response.json();
-            throw new Error(
-              `HTTP error! Status: ${response.status}, Message: ${errorResponse.message}`,
-            );
+            messageToReturn = `HTTP error! Status: ${response.status}, Message: ${errorResponse.message}`;
           } catch (error) {
+            messageToReturn = `HTTP error! Status: ${response.status}`;
             throw new Error(`HTTP error! Status: ${response.status}`);
           }
         }
         return response.json();
       })
       .then((data: any): void => {
+        messageToReturn = "SUCCESS";
         console.log("Success: ", data);
       })
       .catch((error: Error): void => {
+        messageToReturn = "ERROR";
         console.error("Error: ", error.message);
       });
+
+    return messageToReturn;
   }
 
   //TODO: delete console logs from debud due to safety reasons...

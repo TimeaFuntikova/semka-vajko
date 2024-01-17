@@ -1,33 +1,133 @@
 <script lang="ts">
+    import Search from '../src/components/search.svelte';
     import MainPage from './components/pages/Homepage/Homepage.svelte';
-    import LoginPage from './components/pages/loginPage/loginPage.svelte';
+    import LoginPage from '../src/components/pages/loginPage/loginPage.svelte';
+    import RegistrationPage from '../src/components/pages/registrationPage/registrationPage.svelte';
+    import AboutPage from '../src/components/pages/aboutPage/about.svelte';
+    import CoursesPage from '../src/components/pages/coursesPage/courses.svelte';
+    import ContactPage from '../src/components/pages/contactPage/contact.svelte';
+    import ProfilePage from '../src/components/pages/profilePage/profile.svelte';
+    import CourseDescriptionPage from '../src/components/pages/coursesPage/courseManagement.svelte'; //TODO: opravit import
+    import CreateCourse from './components/pages/coursePage/createCourse.svelte';
+    import UpdateCourse from './components/pages/coursePage/updateCourse.svelte';
+    import {currentPage} from "@/storage/form.storage";
+    import {navigateTo} from "@/service/navigation";
+    import {onMount} from "svelte";
 
-    let currentPage = MainPage;
-    function navigateTo(page: any): void {
-        currentPage = page;
+    onMount(() => {
+        initializePage();
+    });
+
+    $: console.log('Current Page:', $currentPage);
+
+
+    //$: if (requiresAuth(currentPage) && !isLoggedIn) {
+     //   navigateTo(LoginPage);
+   // }
+
+    window.onpopstate = function(event) {
+        if (event.state && event.state.page) {
+            switch (event.state.page) {
+                case 'login':
+                    currentPage.set(LoginPage);
+                    break;
+                case 'register':
+                    currentPage.set(RegistrationPage);
+                    break;
+                case 'about':
+                    currentPage.set(AboutPage);
+                    break;
+                case 'courses':
+                    currentPage.set(CoursesPage);
+                    break;
+                case 'contact':
+                    currentPage.set(ContactPage);
+                    break;
+                case 'profile':
+                    currentPage.set(ProfilePage);
+                    break;
+                case 'courseDescription':
+                    currentPage.set(CourseDescriptionPage);
+                    break;
+                case 'createCourse':
+                    currentPage.set(CreateCourse);
+                    break;
+                case 'updateCourse':
+                    currentPage.set(UpdateCourse);
+                    break;
+                default:
+                    currentPage.set(MainPage);
+            }
+        } else {
+            currentPage.set(MainPage);
+        }
+    };
+
+    function initializePage() {
+        const hash = window.location.hash.replace('#', '');
+        switch (hash) {
+            case 'login':
+                currentPage.set(LoginPage);
+                break;
+            case 'register':
+                currentPage.set(RegistrationPage);
+                break;
+            case 'about':
+                currentPage.set(AboutPage);
+                break;
+            case 'courses':
+                currentPage.set(CoursesPage);
+                break;
+            case 'contact':
+                currentPage.set(ContactPage);
+                break;
+            case 'profile':
+                currentPage.set(ProfilePage);
+                break;
+            case 'courseDescription':
+                currentPage.set(CourseDescriptionPage);
+                break;
+            case 'createCourse':
+                currentPage.set(CreateCourse);
+                break;
+            case 'updateCourse':
+                currentPage.set(UpdateCourse);
+                break;
+            default:
+                currentPage.set(MainPage);
+        }
     }
 
-    $: console.dir(currentPage);
+    function handleClick(event, page) {
+        event.preventDefault();
+        navigateTo(page);
+    }
+
 </script>
 
-<svelte:component this={currentPage} {navigateTo} />
+<div class="login-container">
+    <a href="#"><img src="../logoForThePlaform.png" alt="Logo" class="logo"/></a>
+        <div class="right-items">
+            <Search/>
+            <button class="login-button" on:click={event => handleClick(event, LoginPage)}>Login</button>
+            <button class="signup-button" on:click={event => handleClick(event, RegistrationPage)}>Sign Up</button>
+        </div>
+</div>
 
-<button on:click={() => navigateTo(MainPage)}>Main</button>
-<button on:click={() => navigateTo(LoginPage)}>Log in</button>
+<nav>
+    <ul>
+        <li><a href="#about" on:click={event => handleClick(event, AboutPage)}>About</a></li>
+        <li><a href="#courses" on:click={event => handleClick(event, CoursesPage)}>Courses</a></li>
+        <li><a href="#contact" on:click={event => handleClick(event, ContactPage)}>Contact</a></li>
+        <li><a href="#profile" on:click={event => handleClick(event, ProfilePage)}>Profile(#debug)</a></li>
+        <li><a href="#courseDescription" on:click={event => handleClick(event, CourseDescriptionPage)}>CourseDesc(#debug)</a></li>
+        <li><a href="#createCourse" on:click={event => handleClick(event, CreateCourse)}>Create Course(#debug)</a></li>
+        <li><a href="#updateCourse" on:click={event => handleClick(event, UpdateCourse)}>Update Course(#debug)</a></li>
+    </ul>
+</nav>
 
-<style>
-    button {
-    background-color: #555;
-    color: white;
-    outline: none;
-    border: 1px solid #444;
-    cursor: pointer;
-    padding: 14px 16px;
-    font-size: 17px;
-    margin: 5px;
-    }
+<svelte:component this={$currentPage} />
 
-    button:hover {
-    background-color: #777;
-    }
-    </style>
+<footer>
+    <p>&copy; 2023 Online Learning Management System</p>
+</footer>
