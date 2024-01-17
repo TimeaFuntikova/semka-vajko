@@ -1,14 +1,49 @@
+<script lang="ts">
+    import { onMount } from 'svelte';
+
+    let aboutSection;
+
+    onMount(() => {
+        window.addEventListener('scroll', handleScroll);
+        return () => {
+            window.removeEventListener('scroll', handleScroll);
+        };
+    });
+
+    function handleScroll() {
+        const sectionPos = aboutSection.getBoundingClientRect().top;
+        const screenPos = window.innerHeight / 1.3;
+
+        if (sectionPos < screenPos) {
+            aboutSection.classList.add('animate-in');
+        }
+    }
+</script>
+
+<div class="welcome-header">
+    <h1>A little about this platform...</h1>
+</div>
+
 <div class="main">
-    <br>
-    <img src="../logoForThePlaform.png" height="400" width="400"/>
-    <h2 style="margin: 50px">ABOUT ...</h2>
-    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. In pharetra lacus id augue rhoncus fermentum. Pellentesque aliquet posuere egestas. In ac sagittis libero. Sed bibendum mi sit amet sagittis ultricies. Maecenas quam libero, feugiat at velit eu, fermentum sodales sapien. Sed et pellentesque metus. Ut feugiat libero vitae diam aliquet, in bibendum nisi molestie. Quisque dignissim viverra ante. Donec dui nisl, semper nec arcu et, ornare fermentum enim.
+    <div class="about-page-wrapper">
+        <div bind:this={aboutSection} class="about-section">
+            <img src="../logoForThePlaform.png" alt="Platform Logo" class="about-image"/>
+            <div class="about-text">
+                <p>This web application was developed as a semestral project for the VAII course. It provides a place for storing and organizing educational materials for lectures and students, tracking their progress, and awarding completion certificates.</p>
+            </div>
+        </div>
 
-        Quisque ornare neque et risus vulputate, id dictum nunc pellentesque. Donec mattis rhoncus consectetur. Vestibulum sit amet enim ornare nisl pellentesque bibendum tempus et sapien. Praesent ultricies metus sit amet molestie pharetra. Duis luctus purus lobortis consectetur dignissim. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. In hac habitasse platea dictumst. Pellentesque vitae ullamcorper tortor, eu commodo ante. Duis aliquam tortor vel ante faucibus, sit amet congue enim dignissim. Nulla facilisi. Aliquam ac risus a ante egestas pulvinar nec et quam. Nulla facilisi.
-
-        In volutpat maximus felis vitae volutpat. Nam pretium sollicitudin nisi, ac ornare turpis pulvinar sit amet. Integer ornare cursus ultricies. Donec nec leo bibendum mauris convallis imperdiet. In finibus eros vel euismod facilisis. Aliquam eget porttitor sapien. Quisque vestibulum sem eget dui sagittis, sed molestie quam efficitur. Cras consectetur commodo nisl, ac sodales felis pharetra quis.
-
-        Morbi accumsan orci vitae justo pharetra mattis. Donec condimentum velit id dapibus bibendum. Cras vitae tellus porta, laoreet nibh vel, maximus lectus. Suspendisse sodales ligula at sapien eleifend, a porttitor leo sollicitudin. Sed laoreet, massa ut consectetur fringilla, neque turpis egestas nulla, id varius libero urna eget dolor. Suspendisse vitae ex lectus. Aliquam ut orci iaculis, bibendum orci ut, egestas sapien. Suspendisse id lacus at quam pharetra sagittis quis sit amet sem. In lacinia placerat ultricies. In sit amet laoreet odio. Sed congue nec neque vitae scelerisque. Curabitur gravida elit sit amet nisl volutpat varius.
-
-        Nullam ultricies sodales neque, quis consequat nulla eleifend id. Duis convallis nibh augue, sed posuere massa suscipit vel. Nam odio augue, pretium in nisl nec, consequat euismod velit. Morbi bibendum maximus ante et feugiat. Nunc commodo id quam et viverra. Integer eu ex diam. Phasellus pulvinar enim leo, non scelerisque ligula feugiat ut. Nam faucibus lacinia arcu, rhoncus dictum metus ultricies gravida. Quisque eget semper enim. Aenean porta, velit a finibus tincidunt, tortor justo dictum justo, sed mattis neque dolor varius ligula. Donec sed risus et nunc sollicitudin mattis.</p>
+        <div class="terms-section" id="terms-and-conditions">
+            <h2>-TERMS AND CONDITIONS-</h2>
+            <p>By registering, users consent to the processing of the information they provide, solely for the functionality of this platform, specifically:</p>
+            <ul class="terms-list">
+                <li>Username</li>
+                <li>Hashed password</li>
+                <li>Profile picture</li>
+                <li>Course information with descriptions and photos</li>
+            </ul>
+            <p>Users can browse content freely, but enrollment in courses requires agreement to these terms and conditions.</p>
+            <p class="warning-text">Please refrain from creating inappropriate content or spamming. Thank you.</p>
+        </div>
+    </div>
 </div>

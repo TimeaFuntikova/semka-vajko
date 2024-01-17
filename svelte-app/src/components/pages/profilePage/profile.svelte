@@ -5,22 +5,33 @@
     import Upload from "../coursesPage/Forms/CourseImage.svelte";
 </script>
 
-<div class="form-container">
-<div class="main">
-        <h3>UPLOAD PICTURE</h3>
-        <p>Here you can update your profile picture.</p>
-    <Upload/>
 
-    <br>  <br>
-        <h3>UPDATE DATA</h3>
-            <p>Here you can edit your username or password.</p>
-            <Form/>
-    <br>
-            <Button/>
-    <br>  <br>
-            <h3>DELETE ACCOUNT</h3>
-            <p>This action cannot be taken back.</p>
-    <br>
-            <DeleteButton/>
+
+<div class="welcome-header">
+    <h1>My Profile</h1>
+</div>
+
+
+
+<div class="main">
+
+        <div class="profile-content">
+            <h3>Profile Picture</h3>
+            <Upload/>
+        </div>
     </div>
+
+    <div class="profile-content">
+    <div class="form-container">
+        <h3>Update Your Details</h3>
+        <Form/>
+        <Button/>
+    </div>
+
+    <div class="danger-zone">
+        <h3>Delete Account</h3>
+        <p>This action cannot be undone.</p>
+        <DeleteButton/>
+    </div>
+
 </div>

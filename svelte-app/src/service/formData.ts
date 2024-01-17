@@ -3,6 +3,45 @@ export class FormData {
   password: string = "";
   newUsername: string = "";
   newPassword: string = "";
+
+  courseTitle: string = "";
+  courseDescription: string = "";
+  courseCategory: string = "";
+  courseLevel: string = "";
+  courseImage: string = "";
+
+  getCourseTitle(): string {
+    return this.courseTitle;
+  }
+
+  setCourseTitle(val: string): void {
+    this.courseTitle = val;
+  }
+
+  getCourseDescription(): string {
+    return this.courseDescription;
+  }
+
+  setCourseDescription(val: string): void {
+    this.courseDescription = val;
+  }
+
+  getCourseCategory(): string {
+    return this.courseCategory;
+  }
+
+  setCourseCategory(val: string): void {
+    this.courseCategory = val;
+  }
+
+  getCourseLevel(): string {
+    return this.courseLevel;
+  }
+
+  setCourseLevel(val: string): void {
+    this.courseLevel = val;
+  }
+
   getNewUsername(): string {
     return this.newUsername;
   }

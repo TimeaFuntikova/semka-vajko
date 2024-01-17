@@ -2,9 +2,8 @@
     import Pagination from "../../pagination.svelte";
 </script>
 
-<div class="fade-in">
-    <h1 style="text-align: center">Welcome to the Online Learning Platform.</h1>
-    <h2 style="text-align: center">Lern heh.</h2>
+<div class="welcome-header">
+    <h1>Welcome to the Online Learning Platform!</h1>
 </div>
 
 <div class="main">
@@ -30,5 +29,4 @@
             <a href="#">Learn More</a>
         </div>
     </div>
-    <Pagination/>
 </div>

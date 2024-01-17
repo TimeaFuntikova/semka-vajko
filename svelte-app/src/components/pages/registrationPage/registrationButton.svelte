@@ -24,7 +24,14 @@
         const status: string = AppModel.service.handler.validInputs(requestData.name, requestData.password);
        console.log('status:', status);
         if (status == "valid") {
-            await AppModel.service.handler.sendRegistrationRequest(requestData);
+           const statusFunct: string = await AppModel.service.handler.sendRegistrationRequest(requestData);
+            console.log('status from function', statusFunct);
+
+            if(statusFunct == "" || !statusFunct || statusFunct == "ERROR") {
+                //TODO: toast notification about server error
+            } else {
+                //TODO: registration success - take homie to the auth zone
+            }
         } else {
             if (status == "invalid_username") {
                 showInvalidUsername = true;
@@ -34,10 +41,7 @@
         }
     }
 </script>
-
 <br>
-<br>
-
 {#if showInvalidUsername}
     <InvalidUsername/>
 {/if}

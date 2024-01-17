@@ -14,5 +14,5 @@
     }
 </script>
 
-<Button
+<Button kind="danger-tertiary"
         on:click={e => handleUpdateClick(e)}>Delete Account</Button>

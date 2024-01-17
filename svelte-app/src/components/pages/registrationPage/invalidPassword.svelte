@@ -2,7 +2,9 @@
     import { ToastNotification } from "carbon-components-svelte";
 </script>
 
-<ToastNotification
-        title="Invalid password"
-        subtitle="Please, enter a password before continuing."
-/>
+<div style="display: flex; justify-content: center; align-items: center;">
+    <ToastNotification
+            title="Invalid password"
+            subtitle="Please, enter a password before continuing."
+    />
+</div>

@@ -2,4 +2,4 @@
     import { TextArea } from "carbon-components-svelte";
 </script>
 
-<TextArea labelText="Course description" placeholder="Add a short description..." />
+<TextArea labelText="Course description" placeholder="Add a short description (optional)..." />

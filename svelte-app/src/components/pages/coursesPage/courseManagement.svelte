@@ -23,6 +23,11 @@ Toto treba ošetriť aj na databáze čo sa týka príslušnosti k modulu... ale
 
 <!-- sem naťahať dáta len taký kurzov, ktoré prislúchajú, že sú vytvorené lognutym userom, template:-->
 
+
+<div class="welcome-header">
+    <h1>Courses management</h1>
+</div>
+
 <div class="main">
     <h1 style="text-align: left"> My created courses:</h1>
     <div class="row">

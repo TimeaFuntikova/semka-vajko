@@ -2,8 +2,12 @@
     import Pagination from "../../pagination.svelte";
 </script>
 
-<h3 style="text-align: center">Here you can browse all the available courses.</h3>
+<div class="welcome-header">
+    <h1>Here you can browse all the available courses.</h1>
+</div>
+
 <div class="main">
+    <h1>Ennroll for free!</h1>
     <div class="row">
         <div class="course-card">
             <h3>English Course</h3>
@@ -24,5 +28,4 @@
             <a href="#">Learn More</a>
         </div>
     </div>
-    <Pagination/>
 </div>
