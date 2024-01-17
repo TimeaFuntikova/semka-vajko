@@ -2,6 +2,7 @@
     import { MultiSelect } from "carbon-components-svelte";
 </script>
 
+<div style="text-align: left">
 <MultiSelect
         titleText="Course Category"
         label="Select Course Category..."
@@ -11,3 +12,4 @@
     { id: "2", text: "Fun" },
   ]}
 />
+</div>
