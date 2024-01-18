@@ -12,9 +12,13 @@
     let description: string = "";
     let category: string = "";
     let level: string = "";
-    export let image: string = "";
+    let image: string = "";
 
     $: courseStore.set({ title, description, category, level, image });
+
+    function onFileSelected(event) {
+        image = event.detail;
+    }
 
 </script>
 
@@ -24,7 +28,7 @@
 
 <div class="main">
     <div class="form-container">
-        <CourseImage />
+        <CourseImage on:fileselected={e => onFileSelected(e)}/>
         <CourseName bind:value={title} />
         <CourseDescription bind:value={description} />
         <CourseCategory bind:value={category}/>
