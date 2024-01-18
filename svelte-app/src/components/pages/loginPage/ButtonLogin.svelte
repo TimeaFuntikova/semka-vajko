@@ -4,7 +4,7 @@
     import { AppModel } from "@/types/AppModel";
     import ProfilePage from '../profilePage/profile.svelte';
     import MainPage from '../Homepage/Homepage.svelte'
-    import {unregisteredUser} from "@/storage/form.storage";
+    import {loggedUserId, unregisteredUser} from "@/storage/form.storage";
     import {navigateTo} from "@/service/navigation";
 
 
@@ -26,6 +26,11 @@
 
                 if (isRegistered) {
                     await AppModel.service.handler.loggedIn(requestData);
+                    const responseFromServer = await AppModel.service.handler.sendRequestForUserId(username);
+
+                    loggedUserId.set(responseFromServer);
+                    console.log('Stored userID:', $loggedUserId);
+
                     navigateTo(ProfilePage);
                 } else {
                     AppModel.service.handler.unregisteredUser();

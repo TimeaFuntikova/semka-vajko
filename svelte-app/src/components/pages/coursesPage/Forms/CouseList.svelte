@@ -1,15 +1,10 @@
 <script>
     import { Select, SelectItem } from "carbon-components-svelte";
-    export let value = "";
-    function handleInput(e) {
-        value = e.detail;
-    }
 </script>
 
 <Select
-        labelText="Course Level Difficulty"
-        bind:value={value}
-        on:update={(e) => handleInput(e)}
+        labelText="Course To Update"
+        on:change={(e) => console.log("value", e.target.value)}
 >
     <SelectItem value="Easy" />
     <SelectItem value="Medium" />

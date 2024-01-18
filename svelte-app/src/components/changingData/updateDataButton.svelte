@@ -13,5 +13,6 @@
     }
 </script>
 
-<Button
-on:click={e => handleUpdateClick(e)}>Update Data</Button>
+<div style="display: flex; justify-content: center; align-items: center;">
+    <Button on:click={e => handleUpdateClick(e)}>Update Data</Button>
+</div>

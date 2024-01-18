@@ -1,15 +1,17 @@
 <script>
-    import { MultiSelect } from "carbon-components-svelte";
+    import { Select, SelectItem } from "carbon-components-svelte";
+    export let value = "";
+    function handleInput(e) {
+        value = e.detail;
+    }
 </script>
 
-<div style="text-align: left">
-<MultiSelect
-        titleText="Course Category"
-        label="Select Course Category..."
-        items={[
-    { id: "0", text: "Language" },
-    { id: "1", text: "Technology" },
-    { id: "2", text: "Fun" },
-  ]}
-/>
-</div>
+<Select
+        labelText="Course Category"
+        bind:value={value}
+        on:update={(e) => handleInput(e)}
+>
+    <SelectItem value="Language" />
+    <SelectItem value="Technology" />
+    <SelectItem value="Fun" />
+</Select>

@@ -10,16 +10,14 @@
     import CourseDescriptionPage from '../src/components/pages/coursesPage/courseManagement.svelte'; //TODO: opravit import
     import CreateCourse from './components/pages/coursePage/createCourse.svelte';
     import UpdateCourse from './components/pages/coursePage/updateCourse.svelte';
-    import {currentPage} from "@/storage/form.storage";
+    import {currentPage, isLoggedIn, loggedUserId} from "@/storage/form.storage";
     import {navigateTo} from "@/service/navigation";
     import {onMount} from "svelte";
+    import Login from "carbon-icons-svelte/lib/Login.svelte";
 
     onMount(() => {
         initializePage();
     });
-
-    $: console.log('Current Page:', $currentPage);
-
 
     //$: if (requiresAuth(currentPage) && !isLoggedIn) {
      //   navigateTo(LoginPage);
@@ -103,25 +101,43 @@
         navigateTo(page);
     }
 
+    function handleLogout(e, page): void {
+        e.preventDefault();
+        isLoggedIn.set(false);
+        loggedUserId.set("");
+        navigateTo(page);
+    }
+
 </script>
 
 <div class="login-container">
     <a href="#"><img src="../logoForThePlaform.png" alt="Logo" class="logo"/></a>
         <div class="right-items">
             <Search/>
+            {#if $isLoggedIn}
+                <button class="signup-button" on:click={event => handleClick(event, CreateCourse)}>Create Course</button>
+                <button class="login-button" on:click={event => handleLogout(event, MainPage)}>Log Out</button>
+                {:else}
             <button class="login-button" on:click={event => handleClick(event, LoginPage)}>Login</button>
             <button class="signup-button" on:click={event => handleClick(event, RegistrationPage)}>Sign Up</button>
+            {/if}
         </div>
 </div>
 
 <nav>
     <ul>
+        <li><a href="#createCourse" on:click={event => handleClick(event, CreateCourse)}>Create Course(#debug)</a></li>
         <li><a href="#about" on:click={event => handleClick(event, AboutPage)}>About</a></li>
+        <li><a href="#profile" on:click={event => handleClick(event, ProfilePage)}>My Profile</a></li>
+
         <li><a href="#courses" on:click={event => handleClick(event, CoursesPage)}>Courses</a></li>
         <li><a href="#contact" on:click={event => handleClick(event, ContactPage)}>Contact</a></li>
-        <li><a href="#profile" on:click={event => handleClick(event, ProfilePage)}>Profile(#debug)</a></li>
-        <li><a href="#courseDescription" on:click={event => handleClick(event, CourseDescriptionPage)}>CourseDesc(#debug)</a></li>
-        <li><a href="#createCourse" on:click={event => handleClick(event, CreateCourse)}>Create Course(#debug)</a></li>
+        {#if $isLoggedIn}
+            <li><a href="#profile" on:click={event => handleClick(event, ProfilePage)}>My Profile</a></li>
+        {:else}
+            <li><a href="#login" on:click={event => handleClick(event, LoginPage)}>My Profile</a></li>
+        {/if}
+            <li><a href="#courseDescription" on:click={event => handleClick(event, CourseDescriptionPage)}>CourseDesc(#debug)</a></li>
         <li><a href="#updateCourse" on:click={event => handleClick(event, UpdateCourse)}>Update Course(#debug)</a></li>
     </ul>
 </nav>

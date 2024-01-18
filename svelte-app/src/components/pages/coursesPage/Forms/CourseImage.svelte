@@ -13,13 +13,11 @@
     }
 </script>
 
-
 {#if imageUrl}
     <img src={imageUrl} alt="Uploaded Image" class="profile-picture" />
 {/if}
 
-<FileUploaderButton     on:fileselected={handleFileSelect}
-                        status="complete" labelText="Add image" />
+<FileUploaderButton labelText="Add image" on:click={handleFileSelect} />
 <style>
     .profile-picture {
         width: 100px;

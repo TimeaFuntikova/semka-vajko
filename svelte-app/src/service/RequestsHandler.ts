@@ -1,8 +1,14 @@
-import { AppModel } from "@/types/AppModel";
-import { UserRegistrationRequest } from "@/types/UserRegistrationRequest";
+import {
+  CourseCreateRequest,
+  UserRegistrationRequest,
+} from "@/types/UserRegistrationRequest";
 import { Response } from "express";
 import { User } from "@/types/User";
-import { isLoggedIn, unregisteredUser } from "@/storage/form.storage";
+import {
+  isLoggedIn,
+  loggedUserId,
+  unregisteredUser,
+} from "@/storage/form.storage";
 
 export class RequestsHandler {
   allUsersObtained: string = "";
@@ -59,18 +65,83 @@ export class RequestsHandler {
     return false;
   }
 
-  //TODO: change params over the database injection input on backend and reconsider te use of this fnction..
   async loggedIn(requestData: UserRegistrationRequest): Promise<boolean> {
-    await this.sendVerifyRequest(requestData);
-    isLoggedIn.set(true);
-    console.log("User has been logged in.");
-    return true;
+    try {
+      await this.sendVerifyRequest(requestData);
+      isLoggedIn.set(true);
+      console.log("User has been logged in.");
+
+      return true;
+    } catch (e) {
+      e.error();
+    }
+
+    return false;
   }
 
   unregisteredUser(): void {
     //TODO: better redirect.
     unregisteredUser.set(true);
     console.log("User is NOT registered.");
+  }
+
+  async sendRequestCreateCourse(
+    requestData: CourseCreateRequest,
+    userID: string,
+  ): Promise<string> {
+    requestData.userID = userID;
+
+    console.log("REQUEST HANDLER CLASS: ", requestData);
+    let messageToReturn: string = "";
+
+    fetch("http://localhost:8080/api/createCourse", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(requestData),
+    })
+      .then(async (response: Response): Promise<any> => {
+        if (!response.ok) {
+          try {
+            const errorResponse = await response.json();
+            messageToReturn = `HTTP error! Status: ${response.status}, Message: ${errorResponse.message}`;
+          } catch (error) {
+            messageToReturn = `HTTP error! Status: ${response.status}`;
+            throw new Error(`HTTP error! Status: ${response.status}`);
+          }
+        }
+        return response.json();
+      })
+      .then((data: any): void => {
+        messageToReturn = "SUCCESS";
+        console.log("Success: ", data);
+      })
+      .catch((error: Error): void => {
+        messageToReturn = "ERROR";
+        console.error("Error: ", error.message);
+      });
+
+    return messageToReturn;
+  }
+
+  async sendRequestForUserId(username: string): Promise<string> {
+    try {
+      const response: Response = await fetch(
+        `http://localhost:8080/api/getUserId?username=${username}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        },
+      );
+
+      return await response.text();
+    } catch (error) {
+      console.error("Error: ", error);
+      throw error;
+    }
   }
 
   createRequestParams(
