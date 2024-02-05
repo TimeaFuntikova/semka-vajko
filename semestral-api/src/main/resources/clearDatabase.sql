@@ -5,8 +5,8 @@ DROP TABLE IF EXISTS app_user CASCADE;
 
 
 
---ALTER TABLE users
- --   ADD COLUMN id_serial SERIAL;
+ALTER TABLE app_user
+  ADD COLUMN profile_photo_data bytea;
 
 -- Update existing rows with unique values
 ---UPDATE users

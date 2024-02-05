@@ -89,3 +89,20 @@ CREATE TABLE IF NOT EXISTS lesson (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     );
+
+ALTER TABLE APP_COURSE
+    ADD COLUMN created_by_user_id bigint,
+ADD FOREIGN KEY (created_by_user_id) REFERENCES APP_USER(user_id);
+
+-- Image Table
+CREATE TABLE IF NOT EXISTS app_image_data (
+                                    user_id BIGINT REFERENCES app_user(user_id),
+                                    image_id SERIAL PRIMARY KEY,
+                                    name VARCHAR(255),
+                                    type VARCHAR(255)
+);
+
+ALTER TABLE app_image_data
+    ADD COLUMN image_data bytea;
+
+DELETE * from app_enrollment where user_id = 1;

@@ -1,12 +1,17 @@
 package com.semestral.service.impl;
 
+import com.semestral.entity.Course;
 import com.semestral.entity.User;
 import com.semestral.service.UserService;
 import com.semestral.utils.DatabaseUtil;
 import com.semestral.utils.RowMapper;
 import org.springframework.stereotype.Service;
 import com.semestral.utils.PasswordUtil;
+
+import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.List;
+import java.util.Locale;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -14,7 +19,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public boolean isUsernameTaken(String username) {
         String query = "SELECT COUNT(*) FROM app_user WHERE username = ?";
-        List<Boolean> result = DatabaseUtil.executeQuery(DatabaseUtil.getConnection(), query,
+        List<Boolean> result = DatabaseUtil.executeQuery(query,
                 resultSet -> resultSet.getInt(1) > 0, username);
 
         return !result.isEmpty() && result.get(0);
@@ -37,13 +42,18 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<User> getAllUsers() {
         String query = "SELECT * FROM app_user";
-        return DatabaseUtil.executeQuery(DatabaseUtil.getConnection(),query, mapUserRow);
+        return DatabaseUtil.executeQuery(query, mapUserRow);
     }
 
     @Override
     public User getUserByUsername(String username) {
         String query = "SELECT * FROM app_user WHERE username = ?";
-        return DatabaseUtil.executeQuery(DatabaseUtil.getConnection(), query, mapUserRow, username).stream().findFirst().orElse(null);
+        return DatabaseUtil.executeQuery(query, mapUserRow, username).stream().findFirst().orElse(null);
+    }
+
+    @Override
+    public User getUserByID(long userId) {
+        return User.getUserById(userId);
     }
 
     /**
@@ -66,7 +76,7 @@ public class UserServiceImpl implements UserService {
 
         //ak sa zmeni len meno:
         if (isUsernameTaken(newNameDemand)) {
-            throw new RuntimeException("Requested username is already taken choose another.");
+            throw new RuntimeException("Requested username is already taken, please choose another.");
         }
 
         if (newNameDemand != null) {
@@ -78,12 +88,29 @@ public class UserServiceImpl implements UserService {
         byte[] salt = PasswordUtil.generateSalt();
         String hashedPassword = PasswordUtil.hashPassword(newPasswordDemand, salt);
 
-        return User.update(userToBeUpdated, newNameDemand, hashedPassword, salt);
+        String userRole = userToBeUpdated.getUserRole();
+
+        return User.update(userToBeUpdated, newNameDemand, hashedPassword, salt, userRole);
     }
 
     @Override
-    public User delete(User userToDelete) {
+    public boolean delete(User userToDelete) {
         return User.delete(userToDelete);
+    }
+
+    @Override
+    public boolean enroll(String userID, String courseID, LocalDate enrollmentDate) throws SQLException {
+        return User.enroll(userID, courseID, enrollmentDate);
+    }
+
+    @Override
+    public boolean unsub(String userID, String courseID, LocalDate enrollmentDate) throws SQLException {
+        return User.unsub(userID, courseID, enrollmentDate);
+    }
+
+    @Override
+    public boolean isEnrolled(Long userID, Long courseID) throws SQLException {
+        return User.isEnrolled(userID, courseID);
     }
 
     private static final RowMapper<User> mapUserRow = resultSet -> {
@@ -93,5 +120,11 @@ public class UserServiceImpl implements UserService {
         user.setHashedPassword(resultSet.getString("hashed_password"));
         user.setSalt(resultSet.getBytes("salt"));
         return user;
+    };
+
+    private static final RowMapper<Course> mapCourseRow = resultSet -> {
+        Course course = new Course();
+        course.setCreated_by_user_id(resultSet.getLong("created_by_user_id"));
+        return course;
     };
 }

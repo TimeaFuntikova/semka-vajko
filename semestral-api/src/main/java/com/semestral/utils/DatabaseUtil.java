@@ -1,9 +1,11 @@
 package com.semestral.utils;
 
+import com.semestral.entity.Course;
 import com.semestral.entity.User;
 import lombok.Getter;
 
 import java.sql.*;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,76 +26,58 @@ public class DatabaseUtil {
             e.printStackTrace();
         }
     }
-    public static User create(String query, Object... params) throws SQLException {
+
+    public static <T> T executeInsert(String query, Object[] params, RowMapper<T> rowMapper) throws SQLException {
         try (PreparedStatement preparedStatement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
-            for (int i = 0; i < params.length; i++) {
-                preparedStatement.setObject(i + 1, params[i]);
-            }
-
-            preparedStatement.executeUpdate();
-
-            User user = new User();
-            user.setUsername((String) params[0]);
-            user.setHashedPassword((String) params[1]);
-            user.setSalt((byte[]) params[2]);
-
-            return user;
-        }
-    }
-
-    public static boolean update(String query, Object... params) {
-        try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
-            for (int i = 0; i < params.length; i++) {
-                if (params[i] instanceof User) {
-                    User userParam = (User) params[i];
-                    preparedStatement.setObject(i + 1, userParam.getId(), Types.INTEGER);
-                } else {
-                    preparedStatement.setObject(i + 1, params[i]);
-                }
-            }
+            setParameters(preparedStatement, params);
 
             int affectedRows = preparedStatement.executeUpdate();
 
-            if (affectedRows > 0) {
-                System.out.println("Update successful. Rows affected: " + affectedRows);
-                return true;
-            } else {
-                System.out.println("Update failed. No rows affected.");
-                return false;
+            if (affectedRows == 0) {
+                throw new SQLException("Creating object failed, no rows affected.");
             }
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return false;
+
+            try (ResultSet generatedKeys = preparedStatement.getGeneratedKeys()) {
+                if (generatedKeys.next()) {
+                    return rowMapper.mapRow(generatedKeys);
+                } else {
+                    throw new SQLException("Creating object failed, no ID obtained.");
+                }
+            }
         }
     }
 
+    private static void setParameters(PreparedStatement preparedStatement, Object... params) throws SQLException {
+        for (int i = 0; i < params.length; i++) {
+            preparedStatement.setObject(i + 1, params[i]);
+        }
+    }
 
-    public static User delete(String query, Object... params) {
-        User deletedUser = null;
-
+    public static <T> T executeUpdateOrDelete(String query, Object[] params, RowMapper<T> rowMapper) throws SQLException {
         try (PreparedStatement preparedStatement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
-            for (int i = 0; i < params.length; i++) {
-                preparedStatement.setObject(i + 1, params[i]);
-            }
+            setParameters(preparedStatement, params);
+            int affectedRows = preparedStatement.executeUpdate();
 
-            preparedStatement.executeUpdate();
-
+            if (affectedRows > 0) {
                 try (ResultSet generatedKeys = preparedStatement.getGeneratedKeys()) {
                     if (generatedKeys.next()) {
-                        int deletedUserId = generatedKeys.getInt(1);
-                        deletedUser = User.getUserById(deletedUserId);
+                        return rowMapper.mapRow(generatedKeys);
                     }
+                }
             }
-        } catch (SQLException e) {
-            e.printStackTrace();
         }
-
-        return deletedUser;
+        throw new SQLException("Executing UPDATE/DELETE failed, no ID obtained.");
     }
 
 
 
-    public static <T> List<T> executeQuery(Connection connection, String query, RowMapper<T> rowMapper, Object... params) {
+
+    public static <T> List<T> executeQuery(String query, RowMapper<T> rowMapper) {
+        return executeQuery(query, rowMapper, new Object[0] );
+    }
+
+
+    public static <T> List<T> executeQuery(String query, RowMapper<T> rowMapper, Object...params) {
         List<T> results = new ArrayList<>();
         try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
             for (int i = 0; i < params.length; i++) {
@@ -107,8 +91,36 @@ public class DatabaseUtil {
                 }
             }
         } catch (SQLException e) {
-            throw new RuntimeException("Error executing SQL query", e);
+            throw new RuntimeException("Error executing SQL query: " + query, e);
         }
         return results;
+    }
+
+
+    public static boolean enroll(String query, Object... params) throws SQLException {
+        try (PreparedStatement preparedStatement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
+            for (int i = 0; i < params.length; i++) {
+                preparedStatement.setObject(i + 1, params[i]);
+            }
+            preparedStatement.executeUpdate();
+
+            return true;
+        }
+    }
+
+    public static boolean exists(String query, Object... params) throws SQLException {
+        try (Connection connection = DatabaseUtil.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
+            for (int i = 0; i < params.length; i++) {
+                preparedStatement.setObject(i + 1, params[i]);
+            }
+
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                if (resultSet.next()) {
+                    return resultSet.getInt(1) > 0;
+                }
+            }
+        }
+        return false;
     }
 }

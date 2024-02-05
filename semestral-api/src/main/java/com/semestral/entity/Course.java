@@ -1,11 +1,17 @@
 package com.semestral.entity;
 
+import com.semestral.utils.DatabaseUtil;
+import com.semestral.utils.RowMapper;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.sql.Date;
+import java.sql.SQLException;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Represents an online course.
@@ -40,10 +46,17 @@ public class Course {
     private String thumbnail;
 
     @Column(name = "date_created")
-    private Date dateCreated;
+    private LocalDate dateCreated;
 
     @Column(name = "last_updated")
-    private Date lastUpdated;
+    private LocalDate lastUpdated;
+
+    @Column(name = "created_by_user_id")
+    private Long created_by_user_id;
+
+    public void setCreated_by_user_id(Long created_by_user_id) {
+        this.created_by_user_id = created_by_user_id;
+    }
 
     public void setId(Long id) {
         this.id = id;
@@ -57,7 +70,78 @@ public class Course {
     public void setCategory(String category) {this.category = category;}
     public void setLevel(String level) {this.level = level;}
     public void setThumbnail(String thumbnail) {this.thumbnail = thumbnail;}
-    public void setDateCreated(Date dateCreated) {this.dateCreated = dateCreated;}
-    public void setLastUpdated(Date lastUpdated) {this.lastUpdated = lastUpdated;}
+    public void setDateCreated(LocalDate dateCreated) {this.dateCreated = dateCreated;}
+    public void setLastUpdated(LocalDate lastUpdated) {this.lastUpdated = lastUpdated;}
 
+    private static RowMapper<Course> mapToRowMapper() {
+        return resultSet -> {
+            Course course = new Course();
+            course.setId(resultSet.getLong("course_id"));
+            course.setTitle(resultSet.getString("title"));
+            course.setDescription(resultSet.getString("description"));
+            course.setCategory(resultSet.getString("category"));
+            course.setLevel(resultSet.getString("level"));
+            course.setThumbnail(resultSet.getString("thumbnail"));
+            course.setCreated_by_user_id(resultSet.getLong("created_by_user_id"));
+            return course;
+        };
+    }
+    public static Course create(Course coursePar) {
+        String insertQuery = "INSERT INTO app_course (title, description, category, level, date_created, created_by_user_id ) VALUES(?, ?, ?, ?, ?, ?)";
+        try {
+            return DatabaseUtil.executeInsert(insertQuery, new Object[]{coursePar}, mapToRowMapper());
+        } catch (SQLException e) {
+            throw new RuntimeException("Error creating course", e);
+        }
+    }
+
+    public static boolean update(Course course) {
+        String updateQuery = "UPDATE app_course SET title = ?, description = ?, category = ?, level = ?, thumbnail = ? WHERE course_id = ?";
+        try {
+           Course updatedCourse = DatabaseUtil.executeUpdateOrDelete(updateQuery,
+                    new Object[] {course.getTitle(), course.getDescription(), course.getCategory(),
+                    course.getLevel(), course.getThumbnail(), course.getId()}, mapToRowMapper());
+            if (updatedCourse == null) return false;
+        } catch (SQLException e) {
+            throw new RuntimeException("Error updating course", e);
+        }
+        return true;
+    }
+
+    public static boolean delete(Long courseId) throws SQLException {
+        try {
+        String deleteQuery = "DELETE FROM app_course WHERE course_id = ?";
+        DatabaseUtil.executeUpdateOrDelete(deleteQuery, new Object[]{courseId}, mapToRowMapper());
+        return true;
+        } catch (SQLException e) {
+            throw new RuntimeException("Error updating course", e);
+        }
+    }
+
+    public static List<Course> getAllCourses() {
+        String getQuery = "SELECT * FROM app_course";
+        List<Course> courses =
+                DatabaseUtil.executeQuery(
+                        getQuery, mapToRowMapper());
+
+        return courses.isEmpty() ? new ArrayList<>() : courses;
+    }
+
+    public static List<Course> getAllCourses(Long userId) {
+        String getQuery = "SELECT * FROM app_course WHERE created_by_user_id = ?";
+        List<Course> courses =
+                DatabaseUtil.executeQuery(
+                        getQuery, mapToRowMapper(), userId);
+
+        return courses.isEmpty() ? null : courses;
+    }
+
+    public static Course getCourseById(long courseId) {
+        String query = "SELECT * FROM app_course WHERE course_id = ?";
+        List<Course> courses =
+                DatabaseUtil.executeQuery(
+                        query, mapToRowMapper(), courseId);
+
+        return courses.isEmpty() ? null : courses.get(0);
+    }
 }
