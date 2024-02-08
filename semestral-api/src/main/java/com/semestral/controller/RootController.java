@@ -256,6 +256,7 @@ public class RootController {
             course.setCreated_by_user_id(userIDLong);
 
             Course createdCourse = courseService.create(course);
+            System.out.println(createdCourse);
 
             return ResponseEntity.ok(createdCourse);
          } catch (RuntimeException e) {
@@ -334,6 +335,8 @@ public class RootController {
 
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body("Could not delete the course with id: " + courseRequest.getId());
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
         }
     }
 
