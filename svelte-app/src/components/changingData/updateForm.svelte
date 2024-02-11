@@ -11,19 +11,9 @@
     let newUsername: string = "";
     isPasswordValid.set(false);
 
-    function decidePlaceHolder(): string {
-        if (AppModel.service.formDataHandler.getUsername() != "") {
-            newUsername = AppModel.service.formDataHandler.getUsername();
-            return newUsername;
-        } else {
-            return "Enter user name...";
-        }
-    }
-
     function handleInput(password: string): boolean {
         if (AppModel.service.handler.isPasswordValid(password)) {
             isPasswordValid.set(true);
-            AppModel.service.formDataHandler.setNewUsername(newUsername);
             AppModel.service.formDataHandler.setNewPassword(newPassword);
             return true;
         }

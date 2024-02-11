@@ -5,19 +5,22 @@
     import CourseImage from '../coursesPage/Forms/CourseImage.svelte';
     import CourseCategory from '../coursesPage/Forms/CourseCategory.svelte';
     import Button from '../coursesPage/Forms/ButtonCreateCourse.svelte';
-    import {createEventDispatcher} from "svelte";
     import {courseStore} from "@/storage/form.storage";
 
     let title: string = "";
     let description: string = "";
     let category: string = "";
     let level: string = "";
-    let image: string = "";
+    let thumbnail: string = "";
+    let id: string = "";
+    let created_by_user_id = "";
+    let enrollTemp = "";
 
-    $: courseStore.set({ title, description, category, level, image });
+    $: courseStore.set({ title, description, category, level, thumbnail, id, created_by_user_id, enrollTemp});
 
     function onFileSelected(event) {
-        image = event.detail;
+        thumbnail = URL.createObjectURL(event.file);
+        courseStore.update(currentData => ({ ...currentData, thumbnail: event.file }));
     }
 
 </script>
@@ -28,12 +31,13 @@
 
 <div class="main">
     <div class="form-container">
-        <CourseImage on:fileselected={e => onFileSelected(e)}/>
+        <CourseImage on:change={e => onFileSelected(e)}/>
         <CourseName bind:value={title} />
         <CourseDescription bind:value={description} />
         <CourseCategory bind:value={category}/>
         <CourseLevel bind:value={level} />
         <br><br>
         <Button/>
+        <br>
     </div>
 </div>

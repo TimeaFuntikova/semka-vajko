@@ -1,14 +1,11 @@
 import {
   CourseCreateRequest,
+  LessonRequest,
   UserRegistrationRequest,
 } from "@/types/UserRegistrationRequest";
-import { Response } from "express";
+import { response, Response } from "express";
 import { User } from "@/types/User";
-import {
-  isLoggedIn,
-  loggedUserId,
-  unregisteredUser,
-} from "@/storage/form.storage";
+import { isLoggedIn, unregisteredUser } from "@/storage/form.storage";
 
 export class RequestsHandler {
   allUsersObtained: string = "";
@@ -17,9 +14,6 @@ export class RequestsHandler {
     this.allUsersObtained = users;
   }
 
-  getAllUsers(): string {
-    return this.allUsersObtained;
-  }
   isPasswordValid(password: string): boolean {
     return this.check(password);
   }
@@ -40,7 +34,43 @@ export class RequestsHandler {
     } else if (password == "" || !password) {
       return "invalid_password";
     }
-    return "valid";
+    return "VALID";
+  }
+
+  async getLesson(courseID: string): Promise<any> {
+    try {
+      const response: Response = await fetch(
+        `http://localhost:8080/api/getLesson?courseID=${courseID}`,
+      );
+      if (response.ok) {
+        return await response.json();
+      }
+    } catch (error) {
+      console.error("Error: ", error.message);
+
+      return false;
+    }
+  }
+
+  async createLessonRequest(requestData: LessonRequest): Promise<boolean> {
+    try {
+      const response: Response = await fetch(
+        "http://localhost:8080/api/createLesson",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(requestData),
+        },
+      );
+
+      return await this.handleServerResponse(response);
+    } catch (error) {
+      console.error("Error: ", error.message);
+
+      return false;
+    }
   }
 
   private async parseUserFromString(obtainedUsers: string): Promise<User[]> {
@@ -51,6 +81,35 @@ export class RequestsHandler {
       return [];
     }
   }
+
+  async getFilename(currentCourseID: string): Promise<string> {
+    try {
+      const response = await fetch(
+        `http://localhost:8080/api/getFilename?courseId=${currentCourseID}`,
+      );
+      if (response.ok) {
+        return await response.text();
+      } else {
+        console.log("Failed to download image");
+      }
+    } catch (error) {
+      console.log("Error downloading image:", error);
+    }
+  }
+  async downloadImage(filename): Promise<any> {
+    try {
+      const response = await fetch(`http://localhost:8080/api/${filename}`);
+
+      if (response.ok) {
+        return await response.blob();
+      } else {
+        console.log("Failed to download image");
+      }
+    } catch (error) {
+      console.log("Error downloading image:", error);
+    }
+  }
+
   async isRegistered(
     username: string,
     obtainedUsers: string,
@@ -67,65 +126,257 @@ export class RequestsHandler {
 
   async loggedIn(requestData: UserRegistrationRequest): Promise<boolean> {
     try {
-      await this.sendVerifyRequest(requestData);
-      isLoggedIn.set(true);
-      console.log("User has been logged in.");
-
-      return true;
+      const verified: boolean = await this.sendVerifyRequest(requestData);
+      if (verified) {
+        isLoggedIn.set(true);
+        console.log("User has been logged in.");
+        return true;
+      } else {
+        isLoggedIn.set(false);
+        console.log("User has not been logged in.");
+        return false;
+      }
     } catch (e) {
       e.error();
     }
-
-    return false;
   }
 
-  unregisteredUser(): void {
-    //TODO: better redirect.
-    unregisteredUser.set(true);
-    console.log("User is NOT registered.");
+  async isEnrolled(
+    requestData: CourseCreateRequest,
+    userID: string,
+  ): Promise<boolean> {
+    requestData.enrollTemp = userID;
+
+    try {
+      const response: Response = await fetch(
+        "http://localhost:8080/api/enrolled",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(requestData),
+        },
+      );
+      return await this.handleServerResponse(response);
+    } catch (error) {
+      console.error("Error: ", error.message);
+
+      return false;
+    }
+  }
+
+  async enrollRequestUns(
+    requestData: CourseCreateRequest,
+    userID: string,
+  ): Promise<boolean> {
+    requestData.enrollTemp = userID;
+
+    try {
+      const response: Response = await fetch(
+        "http://localhost:8080/api/unsub",
+        {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(requestData),
+        },
+      );
+
+      return await this.handleServerResponse(response);
+    } catch (error) {
+      console.error("Error: ", error.message);
+
+      return false;
+    }
+  }
+
+  async enrollRequest(
+    requestData: CourseCreateRequest,
+    userID: string,
+  ): Promise<boolean> {
+    requestData.enrollTemp = userID;
+
+    try {
+      const response: Response = await fetch(
+        "http://localhost:8080/api/enroll",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(requestData),
+        },
+      );
+
+      return await this.handleServerResponse(response);
+    } catch (error) {
+      console.error("Error: ", error.message);
+
+      return false;
+    }
+  }
+
+  async getUserByID(courseCreatorId: string): Promise<string> {
+    try {
+      console.log("courseCreatorId: ", courseCreatorId);
+      const response: Response = await fetch(
+        `http://localhost:8080/api/getUserByID?courseCreatorId=${courseCreatorId}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "text/plain",
+          },
+        },
+      );
+      if (!response.ok) {
+        console.log("Error, empty response");
+      }
+      return await response.text();
+    } catch (error) {
+      console.error("Error: ", error);
+    }
+  }
+
+  async sendRequestDeleteCourse(
+    requestData: CourseCreateRequest,
+    courseId: string,
+  ): Promise<boolean> {
+    requestData.id = courseId;
+    try {
+      const response: Response = await fetch(
+        "http://localhost:8080/api/deleteCourse",
+        {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(requestData),
+        },
+      );
+      return await this.handleServerResponse(response);
+    } catch (error) {
+      console.error("Error: ", error.message);
+
+      return false;
+    }
+  }
+
+  async sendRequestUpdateCourse(
+    requestData: CourseCreateRequest,
+    courseId: string,
+  ): Promise<boolean> {
+    requestData.id = courseId;
+    try {
+      const response: Response = await fetch(
+        "http://localhost:8080/api/updateCourse",
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(requestData),
+        },
+      );
+      return await this.handleServerResponse(response);
+    } catch (error) {
+      console.error("Error: ", error.message);
+
+      return false;
+    }
+  }
+
+  async getAllCoursesHomepage(): Promise<any> {
+    try {
+      const response: Response = await fetch(
+        `http://localhost:8080/api/getAllCoursesHomepage`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        },
+      );
+      if (!response.ok) {
+        console.error("Error: ", response);
+      }
+
+      return await response.json();
+    } catch (error) {
+      console.error("Error: ", error);
+    }
+  }
+
+  async getCourseById(courseId: string): Promise<any> {
+    try {
+      const response: Response = await fetch(
+        `http://localhost:8080/api/getCourseById?courseId=${courseId}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        },
+      );
+      if (!response.ok) {
+        console.error("Error: ", response.status);
+      }
+      return await response.json();
+    } catch (error) {
+      console.error("Error: ", error);
+    }
+  }
+
+  async getAllCourses(userId: string): Promise<any> {
+    try {
+      const response: Response = await fetch(
+        `http://localhost:8080/api/getAllCourses?userId=${userId}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        },
+      );
+      if (!response.ok) {
+        console.error("Error: ", response.status);
+      }
+      return await response.json();
+    } catch (error) {
+      console.error("Error: ", error);
+    }
   }
 
   async sendRequestCreateCourse(
     requestData: CourseCreateRequest,
     userID: string,
-  ): Promise<string> {
-    requestData.userID = userID;
+  ): Promise<any> {
+    requestData.created_by_user_id = userID;
 
-    console.log("REQUEST HANDLER CLASS: ", requestData);
-    let messageToReturn: string = "";
+    try {
+      const response: Response = await fetch(
+        "http://localhost:8080/api/createCourse",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(requestData),
+        },
+      );
+      if (!response.ok) {
+        console.error("Error: ", response.status);
+      }
+      return await response.json();
+    } catch (error) {
+      console.error("Error: ", error.message);
 
-    fetch("http://localhost:8080/api/createCourse", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(requestData),
-    })
-      .then(async (response: Response): Promise<any> => {
-        if (!response.ok) {
-          try {
-            const errorResponse = await response.json();
-            messageToReturn = `HTTP error! Status: ${response.status}, Message: ${errorResponse.message}`;
-          } catch (error) {
-            messageToReturn = `HTTP error! Status: ${response.status}`;
-            throw new Error(`HTTP error! Status: ${response.status}`);
-          }
-        }
-        return response.json();
-      })
-      .then((data: any): void => {
-        messageToReturn = "SUCCESS";
-        console.log("Success: ", data);
-      })
-      .catch((error: Error): void => {
-        messageToReturn = "ERROR";
-        console.error("Error: ", error.message);
-      });
-
-    return messageToReturn;
+      return false;
+    }
   }
 
-  async sendRequestForUserId(username: string): Promise<string> {
+  async sendRequestForUserId(username: string): Promise<any> {
     try {
       const response: Response = await fetch(
         `http://localhost:8080/api/getUserId?username=${username}`,
@@ -137,10 +388,14 @@ export class RequestsHandler {
         },
       );
 
-      return await response.text();
+      if (!response.ok) {
+        console.error("Error: ", response.status);
+      }
+      return await response.json();
     } catch (error) {
-      console.error("Error: ", error);
-      throw error;
+      console.error("Error: ", error.message);
+
+      return false;
     }
   }
 
@@ -149,15 +404,16 @@ export class RequestsHandler {
     password: string,
     newPasswd: string,
     newName: string,
+    userRole: string,
   ): UserRegistrationRequest {
     return {
       name: username,
       password: password,
       newPasswordDemand: newPasswd,
       newNameDemand: newName,
+      userRole: userRole,
     };
   }
-  //TODO: resolve requestDataarsong on the db injection here
 
   /**
    * Fetching created user form db.
@@ -166,72 +422,53 @@ export class RequestsHandler {
    */
   async sendRegistrationRequest(
     requestData: UserRegistrationRequest,
-  ): Promise<string> {
-    console.log(requestData);
+  ): Promise<any> {
+    try {
+      const response: Response = await fetch(
+        "http://localhost:8080/api/createUser",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(requestData),
+        },
+      );
+      if (!response.ok) {
+        console.error("Error: ", response.status);
+      }
+      return await response.json();
+    } catch (error) {
+      console.error("Error: ", error.message);
 
-    let messageToReturn: string = "";
-
-    fetch("http://localhost:8080/api/createUser", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(requestData),
-    })
-      .then(async (response: Response): Promise<any> => {
-        if (!response.ok) {
-          try {
-            const errorResponse = await response.json();
-            messageToReturn = `HTTP error! Status: ${response.status}, Message: ${errorResponse.message}`;
-          } catch (error) {
-            messageToReturn = `HTTP error! Status: ${response.status}`;
-            throw new Error(`HTTP error! Status: ${response.status}`);
-          }
-        }
-        return response.json();
-      })
-      .then((data: any): void => {
-        messageToReturn = "SUCCESS";
-        console.log("Success: ", data);
-      })
-      .catch((error: Error): void => {
-        messageToReturn = "ERROR";
-        console.error("Error: ", error.message);
-      });
-
-    return messageToReturn;
+      return false;
+    }
   }
 
-  //TODO: delete console logs from debud due to safety reasons...
   /**
    * Checks if the login is successful.
    */
-  async sendVerifyRequest(requestData: UserRegistrationRequest): Promise<void> {
-    console.log(requestData);
+  async sendVerifyRequest(
+    requestData: UserRegistrationRequest,
+  ): Promise<boolean> {
+    try {
+      const response: Response = await fetch(
+        "http://localhost:8080/api/verify",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(requestData),
+        },
+      );
 
-    fetch("http://localhost:8080/api/verify", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(requestData),
-    })
-      .then(async (response: Response): Promise<any> => {
-        if (!response.ok) {
-          try {
-            const errorResponse = await response.json();
-          } catch (error) {
-            throw new Error(`HTTP error! Status: ${response.status}`);
-          }
-        }
-        return response.json();
-      })
-      .then((data: any): void => {
-        console.log("Success: ", data);
-      })
-      .catch((error: Error): void => {
-        console.error("Error: ", error.message);
-      });
+      return await this.handleServerResponse(response);
+    } catch (error) {
+      console.error("Error: ", error.message);
+
+      return false;
+    }
   }
 
   /**
@@ -239,7 +476,6 @@ export class RequestsHandler {
    * If not-> should redirect to register form and THEN should create the user in db
    * If already does -> should redirect to log in landing page.
    */
-  //TODO: redirecting to sites depending on the login status.
   async sendRequestGetAllUsers(): Promise<string> {
     try {
       const response: Response = await fetch(
@@ -255,70 +491,66 @@ export class RequestsHandler {
       return await response.text();
     } catch (error) {
       console.error("Error: ", error);
-      throw error;
+    }
+  }
+  async sendUpdateRequest(
+    requestData: UserRegistrationRequest,
+  ): Promise<boolean> {
+    try {
+      const response: Response = await fetch(
+        "http://localhost:8080/api/updateUserData",
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(requestData),
+        },
+      );
+
+      return await this.handleServerResponse(response);
+    } catch (error) {
+      console.error("Error: ", error.message);
+
+      return false;
     }
   }
 
-  //TODO: look for the data input on database as injection parameter here as well
-  async sendUpdateRequest(requestData: UserRegistrationRequest): Promise<void> {
-    console.log(requestData);
-
-    const response: Response = await fetch(
-      "http://localhost:8080/api/updateUserData",
-      {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
+  async sendDeleteRequest(
+    requestData: UserRegistrationRequest,
+  ): Promise<boolean> {
+    try {
+      const response: Response = await fetch(
+        "http://localhost:8080/api/deleteUser",
+        {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(requestData),
         },
-        body: JSON.stringify(requestData),
-      },
-    )
-      .then(async (response: Response): Promise<any> => {
-        if (!response.ok) {
-          try {
-            const errorResponse = await response.text();
-          } catch (error) {
-            throw new Error(`HTTP error! Status: ${response.status}`);
-          }
-        }
-        return response.text();
-      })
-      .then((data: any): void => {
-        console.log("Success: ", data);
-      })
-      .catch((error: Error): void => {
-        console.error("Error: ", error.message);
-      });
+      );
+
+      return await this.handleServerResponse(response);
+    } catch (error) {
+      console.error("Error: ", error.message);
+
+      return false;
+    }
   }
 
-  async sendDeleteRequest(requestData: UserRegistrationRequest): Promise<void> {
-    console.log(requestData);
+  private async handleServerResponse(response: Response): Promise<boolean> {
+    if (!response.ok) {
+      const errorResponse = await response.json();
+      console.log("Response error: ", errorResponse);
 
-    const response: Response = await fetch(
-      "http://localhost:8080/api/deleteUser",
-      {
-        method: "DELETE",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(requestData),
-      },
-    )
-      .then(async (response: Response): Promise<any> => {
-        if (!response.ok) {
-          try {
-            const errorResponse = await response.text();
-          } catch (error) {
-            throw new Error(`HTTP error! Status: ${response.status}`);
-          }
-        }
-        return response.text();
-      })
-      .then((data: any): void => {
-        console.log("Success: ", data);
-      })
-      .catch((error: Error): void => {
-        console.error("Error: ", error.message);
-      });
+      return false;
+    }
+
+    const responseFromServer = await response.json();
+    const statusEnrolled: boolean = !!responseFromServer;
+    console.log("Enrollment requesting status: ", statusEnrolled);
+
+    return statusEnrolled;
   }
 }

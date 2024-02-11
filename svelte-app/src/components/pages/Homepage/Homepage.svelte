@@ -1,7 +1,3 @@
-<script lang="ts">
-    import Pagination from "../../pagination.svelte";
-</script>
-
 <div class="welcome-header">
     <h1>Welcome to the Online Learning Platform!</h1>
 </div>

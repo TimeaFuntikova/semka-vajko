@@ -8,15 +8,8 @@
 
     let checked = false;
 
-    function changeStatus(): void {
-
-    }
-
     function handleRegister() {
             checked = !checked;
-            console.log(checked);
-            // Proceed with the registration logic
-            console.log('Proceed with registration');
     }
     function goToTermsAndConditions() {
         navigateTo(AboutPage);

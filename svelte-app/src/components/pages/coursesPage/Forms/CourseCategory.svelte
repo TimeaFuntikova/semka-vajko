@@ -6,11 +6,9 @@
     }
 </script>
 
-<Select
-        labelText="Course Category"
+<Select labelText="Course Category"
         bind:value={value}
-        on:update={(e) => handleInput(e)}
->
+        on:update={(e) => handleInput(e)}>
     <SelectItem value="Language" />
     <SelectItem value="Technology" />
     <SelectItem value="Fun" />

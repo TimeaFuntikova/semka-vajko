@@ -6,57 +6,96 @@
     import CourseCategory from '../coursesPage/Forms/CourseCategory.svelte';
     import Button from '../coursesPage/Forms/ButtonUpdateCourse.svelte';
     import ButtonDelete from '../coursesPage/Forms/ButtonDeleteCourse.svelte';
+    import {onMount} from "svelte";
     import {AppModel} from "@/types/AppModel";
-    import {createEventDispatcher} from "svelte";
+    import {courseStore, currentCourseId} from "@/storage/form.storage";
+    import LessonForm from './LessonForms/LessonForm.svelte';
+    import ErrorToast from './toastError.svelte';
 
     let title: string = "";
-    let description: string  = "";
+    let description: string = "";
     let category: string = "";
-    let difficultyLevel: string = "";
-    let image: string  = "";
+    let level: string = "";
+    let thumbnail: string = "";
+    let id: string = "";
+    let created_by_user_id = "";
+    let enrollTemp = "";
 
-    const dispatch = createEventDispatcher();
+    let error = false;
 
-    async function handleSubmit() {
-        dispatch('submit');
-        const courseData = { title, description, category, difficultyLevel, image };
-        console.log('Course created:', courseData);
+    let lections = [];
 
-        // TODO: API call to create the course
+    $: courseStore.set({ title, description, category, level, thumbnail, id, created_by_user_id, enrollTemp});
+
+    onMount(fetchCourseData);
+
+    async function fetchCourseData() {
         try {
-            //await AppModel.service.handler.createCourse(courseData);
-            console.log('Course created:', courseData);
+            const response = await AppModel.service.handler.getCourseById($currentCourseId);
+            if (response) {
+                title = response.title || "";
+                description = response.description || "";
+                category = response.category || "";
+                level = response.level || "";
+                thumbnail = response.thumbnail || "";
+            }
+
         } catch (error) {
-            console.error('Error creating course:', error);
+            console.error('Error fetching course data:', error);
+            error = true;
         }
     }
 
-    async function handleDelete(): void {
-    //TODO: handle deleting course here
+    function addNewLection() {
+        console.log("Add new lection button clicked");
+        showLessonForm = true;
+        console.log("showLessonForm value after click:", showLessonForm);
     }
+
+    function handleAddLesson(event) {
+        lections = [...lections, event.detail];
+        showLessonForm = false;
+    }
+
+    let showLessonForm = false;
+
 </script>
-
-
 <div class="welcome-header">
-    <h1>Updating course</h1>
+    <h1>Updating {title}</h1>
 </div>
-
 
 <div class="main">
     <div class="form-container">
-        <CourseImage bind:value={image} />
+        <CourseImage />
         <CourseName bind:value={title} />
         <CourseDescription bind:value={description} />
         <CourseCategory bind:value={category} />
-        <CourseLevel bind:value={difficultyLevel} />
-        <br><br>
-        <Button on:click={handleSubmit} />
-        <br><br>
+        <CourseLevel bind:value={level} />
+        <br>
+        <ul>
+            {#each lections as lection}
+                <li>{lection.title}</li>
+            {/each}
+        </ul>
+<div>
+        {#if !showLessonForm}
+        <button on:click={addNewLection} class="signup-button">Add New Lection</button>
+        {/if}
+        {#if showLessonForm}
+                <LessonForm on:addLesson={e => handleAddLesson(e)} />
+        {/if}
+    {#if error}
+        <ErrorToast />
+    {/if}
+</div>
+        <br>
+        <Button />
+        <br>
 
         <div class="danger-zone">
             <h3>Delete Course</h3>
             <p>This action cannot be undone.</p>
-            <ButtonDelete on:click={handleDelete} />
+            <ButtonDelete />
         </div>
     </div>
 </div>

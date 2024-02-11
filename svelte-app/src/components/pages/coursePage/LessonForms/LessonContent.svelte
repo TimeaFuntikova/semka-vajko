@@ -4,8 +4,7 @@
 </script>
 
 <TextArea
-
-        labelText="Course description"
-        placeholder="Add a short description (optional)..."
+        labelText="Lesson content"
+        placeholder="Add the content for your lecture..."
         bind:value={value}
 />

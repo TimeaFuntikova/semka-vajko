@@ -10,18 +10,22 @@
     import CourseDescriptionPage from '../src/components/pages/coursesPage/courseManagement.svelte'; //TODO: opravit import
     import CreateCourse from './components/pages/coursePage/createCourse.svelte';
     import UpdateCourse from './components/pages/coursePage/updateCourse.svelte';
-    import {currentPage, isLoggedIn, loggedUserId} from "@/storage/form.storage";
+    import {
+        allCourses,
+        courses,
+        currentCourseId,
+        currentPage, enrolled,
+        isLoggedIn,
+        loggedUserId,
+        userProfileImage
+    } from "@/storage/form.storage";
     import {navigateTo} from "@/service/navigation";
     import {onMount} from "svelte";
-    import Login from "carbon-icons-svelte/lib/Login.svelte";
+    import {AppModel} from "@/types/AppModel";
 
     onMount(() => {
         initializePage();
     });
-
-    //$: if (requiresAuth(currentPage) && !isLoggedIn) {
-     //   navigateTo(LoginPage);
-   // }
 
     window.onpopstate = function(event) {
         if (event.state && event.state.page) {
@@ -105,7 +109,39 @@
         e.preventDefault();
         isLoggedIn.set(false);
         loggedUserId.set("");
+        currentCourseId.set("")
+        userProfileImage.set("");
+        AppModel.service.formDataHandler.clear();
         navigateTo(page);
+    }
+
+    async function handleMyCourses(e, page) {
+        e.preventDefault();
+        try {
+            const userCourses = await AppModel.service.handler.getAllCourses($loggedUserId);
+            courses.set(userCourses);
+            navigateTo(page);
+        } catch (error) {
+            console.error("Error loading user courses: ", error);
+        }
+    }
+
+    async function clearSettings(allCoursesP: any): Promise<void> {
+        allCourses.set(allCoursesP);
+        currentCourseId.set(null);
+        enrolled.set(false);
+    }
+
+    async function handleAllCourses(e, page) {
+        e.preventDefault();
+        try {
+            allCourses.set(null);
+            const allTheCourses = await AppModel.service.handler.getAllCoursesHomepage();
+            await clearSettings(allTheCourses);
+            navigateTo(page);
+        } catch (error) {
+            console.error("Error loading all courses: ", error);
+        }
     }
 
 </script>
@@ -121,24 +157,23 @@
             <button class="login-button" on:click={event => handleClick(event, LoginPage)}>Login</button>
             <button class="signup-button" on:click={event => handleClick(event, RegistrationPage)}>Sign Up</button>
             {/if}
+            {#if $userProfileImage}
+                <img src={$userProfileImage} alt="Profile Picture" class="profile-pic"/>
+            {/if}
         </div>
 </div>
 
 <nav>
     <ul>
-        <li><a href="#createCourse" on:click={event => handleClick(event, CreateCourse)}>Create Course(#debug)</a></li>
         <li><a href="#about" on:click={event => handleClick(event, AboutPage)}>About</a></li>
-        <li><a href="#profile" on:click={event => handleClick(event, ProfilePage)}>My Profile</a></li>
-
-        <li><a href="#courses" on:click={event => handleClick(event, CoursesPage)}>Courses</a></li>
+        <li><a href="#courses" on:click={event => handleAllCourses(event, CoursesPage)}>Courses</a></li>
         <li><a href="#contact" on:click={event => handleClick(event, ContactPage)}>Contact</a></li>
         {#if $isLoggedIn}
             <li><a href="#profile" on:click={event => handleClick(event, ProfilePage)}>My Profile</a></li>
+            <li><a href="#courseDescription" on:click={event => handleMyCourses(event, CourseDescriptionPage)}>My Courses</a></li>
         {:else}
             <li><a href="#login" on:click={event => handleClick(event, LoginPage)}>My Profile</a></li>
         {/if}
-            <li><a href="#courseDescription" on:click={event => handleClick(event, CourseDescriptionPage)}>CourseDesc(#debug)</a></li>
-        <li><a href="#updateCourse" on:click={event => handleClick(event, UpdateCourse)}>Update Course(#debug)</a></li>
     </ul>
 </nav>
 
@@ -147,3 +182,11 @@
 <footer>
     <p>&copy; 2023 Online Learning Management System</p>
 </footer>
+
+<style>
+    .profile-pic {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+    }
+    </style>

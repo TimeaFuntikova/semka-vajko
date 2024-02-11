@@ -1,3 +1,14 @@
+.course-image {
+	width: 200px;
+	height: auto;
+}
+
+.avatar-container {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	flex-direction: column;
+}
 
 * {
 	box-sizing: border-box;
@@ -161,7 +172,7 @@ body .signup-container {
 	align-items: center;
 }
 
-.login-button, .signup-button, .search-bar {
+.login-button, .signup-button, .edit-button, .deletee-button, .search-bar {
 	padding: 8px 16px;
 	font-size: 14px;
 	color: white;
@@ -176,6 +187,13 @@ body .signup-container {
 	background-color: #B286DB;
 }
 
+.edit-button {
+	background-color: forestgreen;
+}
+
+.deletee-button {
+	background-color: indianred;
+}
 .login-button:hover, .signup-button:hover {
 	background-color: #745CDB;
 }
@@ -305,7 +323,7 @@ body main {
 body .main {
 	padding: 50px;
 	text-align: center;
-	margin-top: 120px;
+	margin-top: 15%;
 }
 
 body .side {
