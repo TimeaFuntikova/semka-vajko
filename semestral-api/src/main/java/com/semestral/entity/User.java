@@ -161,4 +161,10 @@ public class User {
         String query = "SELECT COUNT(1) FROM app_enrollment WHERE user_id = ? AND course_id = ?";
         return DatabaseUtil.exists(query, userID, courseID);
     }
+
+    public static boolean markCompleted(Long userID, Long courseID, LocalDate currentDate) throws SQLException {
+        String updateQuery = "UPDATE app_enrollment SET completion_status = ? WHERE user_id = ? AND course_id = ?";
+        return DatabaseUtil.enroll(updateQuery, currentDate, userID, courseID);
+    }
+
 }

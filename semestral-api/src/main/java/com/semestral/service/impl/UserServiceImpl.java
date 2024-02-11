@@ -106,6 +106,17 @@ public class UserServiceImpl implements UserService {
         return User.isEnrolled(userID, courseID);
     }
 
+    @Override
+    public boolean markCompleted(Long userID, Long courseID, LocalDate currentDate) throws SQLException {
+        return User.markCompleted(userID, courseID, currentDate);
+    }
+
+    @Override
+    public boolean getCompleted(Long userID, Long courseID) throws SQLException {
+        return DatabaseUtil.getCompleted(userID, courseID);
+    }
+
+
     private static final RowMapper<User> mapUserRow = resultSet -> {
         User user = new User();
         user.setId(resultSet.getLong("user_id"));

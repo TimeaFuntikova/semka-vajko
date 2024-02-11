@@ -69,6 +69,28 @@ public class RootController {
     }
 
     @CrossOrigin(origins = "*")
+    @PostMapping("/markCompleted")
+    public ResponseEntity<?> markCompleted(@RequestParam String userID, @RequestParam String courseID) throws IOException, SQLException {
+        Long courseIDLong = parseLong(courseID);
+        Long userIDLong = parseLong(userID);
+        LocalDate currentDate = LocalDate.now();
+
+        boolean returnedLesson = userService.markCompleted(userIDLong, courseIDLong, currentDate);
+        return ResponseEntity.status(HttpStatus.OK).body(returnedLesson);
+    }
+
+    @CrossOrigin(origins = "*")
+    @GetMapping("/getCompleted")
+    public ResponseEntity<?> getCompleted(@RequestParam String userID, @RequestParam String courseID) throws IOException, SQLException {
+        Long courseIDLong = parseLong(courseID);
+        Long userIDLong = parseLong(userID);
+
+        boolean returnedLesson = userService.getCompleted(userIDLong, courseIDLong);
+        System.out.println(returnedLesson);
+        return ResponseEntity.status(HttpStatus.OK).body(returnedLesson);
+    }
+
+    @CrossOrigin(origins = "*")
     @PostMapping("/createLesson")
     public ResponseEntity<?> createLesson(@RequestBody LessonRequest lessonRequest) throws IOException, SQLException {
        Lesson lesson = new Lesson();
@@ -93,6 +115,14 @@ public class RootController {
         return ResponseEntity.status(HttpStatus.OK).body(returnedLesson);
     }
 
+    @CrossOrigin(origins = "*")
+    @DeleteMapping("/deleteLessons")
+    public ResponseEntity<?> deleteLessons(@RequestParam String courseID) throws IOException, SQLException {
+        Long courseIDLong = parseLong(courseID);
+
+        boolean deleteSucc = lessonService.deleteAllByCourse(courseIDLong);
+        return ResponseEntity.status(HttpStatus.OK).body(deleteSucc);
+    }
 
     @CrossOrigin(origins = "*")
     @PostMapping("/uploadImageAvatar")

@@ -135,4 +135,18 @@ public class DatabaseUtil {
         }
         return false;
     }
+
+    public static boolean getCompleted(Long userID, Long courseID) throws SQLException {
+        String query = "SELECT completion_status FROM app_enrollment WHERE user_id = ? AND course_id = ?";
+        try (Connection connection = DatabaseUtil.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+            preparedStatement.setLong(1, userID);
+            preparedStatement.setLong(2, courseID);
+
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                return resultSet.next() && resultSet.getString("completion_status") != null;
+            }
+        }
+    }
+
 }

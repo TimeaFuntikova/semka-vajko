@@ -28,4 +28,7 @@ public interface UserService {
     boolean unsub(Long userID, Long courseID) throws SQLException;
     boolean unsub(Long userID) throws SQLException;
     boolean isEnrolled(Long userID, Long courseID) throws SQLException;
+
+    boolean markCompleted(Long userID, Long courseID, LocalDate currentDate) throws SQLException;
+    boolean getCompleted(Long userID, Long courseID) throws SQLException;
 }
