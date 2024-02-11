@@ -32,6 +32,8 @@
         currentCourseID = value;
     });
 
+    let showGoTOLectureButton = false;
+
     async function assignCourseAttributes(response) {
         title = response.title || "";
         description = response.description || "";
@@ -47,6 +49,10 @@
             if (response) await assignCourseAttributes(response);
             if ($loggedUserId !== "") await checkEnrollment();
             await loadPictureData();
+
+            //zisti, ci ma kurz zadelene lekcie:
+            const maLekcie = await AppModel.service.handler.getLesson($currentCourseId);
+            if(maLekcie) showGoTOLectureButton = true;
         } catch (error) {
             console.error('Error fetching course data:', error);
         } finally {
@@ -176,7 +182,11 @@
             {#if !loading}
                 {#if enrolledBool}
                     <button class="deletee-button" on:click={e => handleUnsubscribe(e)}>Unsubscribe</button>
-                    <button class="signup-button" on:click={e => handleLearning(e)}>Go to Lecture</button>
+                    {#if showGoTOLectureButton}
+                        <button class="signup-button" on:click={e => handleLearning(e)}>Go to Lecture</button>
+                    {:else}
+                        <p>No lectures assigned for this course</p>
+                    {/if}
                 {:else}
                     <button class="edit-button" on:click={e => handleEnroll(e)}>Enroll</button>
                 {/if}
