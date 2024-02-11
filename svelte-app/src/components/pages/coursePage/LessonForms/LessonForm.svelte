@@ -5,8 +5,10 @@
     import {AppModel} from "@/types/AppModel";
     import {LessonRequest} from "@/types/UserRegistrationRequest";
     import LessonSuccAnn from './toastSuccessfullyCreatedLesson.svelte';
-    import {currentCourseId, loggedUserId} from "@/storage/form.storage.js";
-    import {onMount} from "svelte";
+    import {currentCourseId} from "@/storage/form.storage.js";
+    import {navigateTo} from "@/service/navigation";
+    import CoursesMine from '../../coursesPage/courseManagement.svelte';
+    import ToastRedirect from '../toastRedirecting.svelte';
 
     let lessonContent = "";
     let quizQuestion = "";
@@ -15,6 +17,7 @@
 
     let showSuccesLessonCreated = false;
     let courseID;
+    let showRedirect = false;
 
     async function addLesson() {
         const lesson: LessonRequest = {
@@ -30,6 +33,10 @@
         const lessonCreated = await AppModel.service.handler.createLessonRequest(lesson);
         if(lessonCreated) showSuccesLessonCreated = true;
         resetForm();
+        setTimeout(() => {
+            showRedirect = true;
+            navigateTo(CoursesMine);
+        }, 2000);
     }
 
    $: currentCourseId.subscribe(value => {
@@ -90,4 +97,8 @@
     {#if showSuccesLessonCreated}
         <LessonSuccAnn/>
         {/if}
+    {#if showRedirect}
+        <ToastRedirect/>
+    {/if}
+
 </div>

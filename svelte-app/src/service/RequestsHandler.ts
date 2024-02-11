@@ -37,6 +37,46 @@ export class RequestsHandler {
     return "VALID";
   }
 
+  async getCompleted(userID: string, courseID: string): Promise<boolean> {
+    try {
+      const response: Response = await fetch(
+        `http://localhost:8080/api/getCompleted?userID=${userID}&courseID=${courseID}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        },
+      );
+
+      return await this.handleServerResponse(response);
+    } catch (error) {
+      console.error("Error: ", error.message);
+
+      return false;
+    }
+  }
+
+  async markCompleted(userID: string, courseID: string): Promise<boolean> {
+    try {
+      const response: Response = await fetch(
+        `http://localhost:8080/api/markCompleted?userID=${userID}&courseID=${courseID}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        },
+      );
+
+      return await this.handleServerResponse(response);
+    } catch (error) {
+      console.error("Error: ", error.message);
+
+      return false;
+    }
+  }
+
   async deleteLessons(courseID: string): Promise<any> {
     try {
       const response: Response = await fetch(

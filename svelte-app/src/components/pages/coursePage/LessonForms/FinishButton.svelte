@@ -2,13 +2,15 @@
 import {Button} from "carbon-components-svelte";
 import {navigateTo} from "@/service/navigation";
 import CoursesPage from '../../coursesPage/courses.svelte';
-import {courseStore, currentCourseId, loggedUserId} from "@/storage/form.storage";
+import {currentCourseId, loggedUserId} from "@/storage/form.storage";
 import {AppModel} from "@/types/AppModel";
 
 let showFinish= false;
 async function handleClick() {
-    const succ: boolean = await AppModel.service.handler.enrollRequestUns($courseStore, $loggedUserId);
-    if(succ) console.log('Unsub success');
+    const assignedCompletition: boolean = await AppModel.service.handler.markCompleted($loggedUserId.toString(), $currentCourseId.toString());
+    console.log('MARKINGG', assignedCompletition);
+    //const succ: boolean = await AppModel.service.handler.enrollRequestUns($courseStore, $loggedUserId);
+    //if(succ) console.log('Unsub success');
     currentCourseId.set("");
     navigateTo(CoursesPage);
 }

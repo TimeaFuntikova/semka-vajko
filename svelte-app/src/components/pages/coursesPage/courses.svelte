@@ -1,9 +1,9 @@
 <script lang="ts">
-    import { allCourses, currentCourseId } from "@/storage/form.storage";
+    import {allCourses, currentCourseId} from "@/storage/form.storage";
     import CourseInfo from '../coursePage/courseDescriptionPage.svelte';
-    import { navigateTo } from "@/service/navigation";
-    import { onMount } from "svelte";
-    import { AppModel } from "@/types/AppModel.js";
+    import {navigateTo} from "@/service/navigation";
+    import {onMount} from "svelte";
+    import {AppModel} from "@/types/AppModel.js";
 
     let allCoursesToHomepage = [];
     allCourses.subscribe(value => {
@@ -13,16 +13,16 @@
     let downloadedImages = {};
 
     async function fetchAllCoursesData() {
-        currentCourseId.set(null);
-        allCoursesToHomepage.forEach(course => {
-            getPicture(course.id);
-        });
+        try {
+            await Promise.all(allCoursesToHomepage.map(course => getPicture(course.id)));
+        } catch (error) {
+            console.error('Error fetching course data:', error);
+        }
     }
 
     async function getPicture(id: string) {
         const fileName = await AppModel.service.handler.getFilename(id);
-        const image = await AppModel.service.handler.downloadImage(fileName);
-        downloadedImages[id] = image;
+        downloadedImages[id] = await AppModel.service.handler.downloadImage(fileName);
     }
 
     function handleClick(e, page, courseId) {

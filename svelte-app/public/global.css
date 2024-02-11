@@ -3,6 +3,26 @@
 	height: auto;
 }
 
+.lesson-info {
+	border: 1px solid #ccc;
+	border-radius: 5px;
+	padding: 10px;
+	margin-bottom: 20px;
+}
+
+.lesson-info p {
+	margin: 0;
+}
+
+.lesson-info p:not(:last-child) {
+	margin-bottom: 10px;
+}
+
+.lesson-info strong {
+	font-weight: bold;
+	margin-right: 5px;
+}
+
 .avatar-container {
 	display: flex;
 	align-items: center;

@@ -12,6 +12,10 @@
     import LessonForm from './LessonForms/LessonForm.svelte';
     import ErrorToast from './toastError.svelte';
     import ShowSuccDel from './toastSuccessfullyDeletedLessons.svelte';
+    import {navigateTo} from "@/service/navigation";
+    import CoursesMine from '../coursesPage/courseManagement.svelte';
+    import RedirectInfo from '../coursePage/toastRedirecting.svelte';
+
 
     let title: string = "";
     let description: string = "";
@@ -28,6 +32,9 @@
     //lesson attributes
     let content: string = "";
     let quizQuestion: string = "";
+
+    let showRedirect = false;
+
 
     $: courseStore.set({ title, description, category, level, thumbnail, id, created_by_user_id, enrollTemp});
 
@@ -86,6 +93,10 @@
             if (success) {
                 console.log('Lesson deleted successfully.');
                 showSuccDel = true;
+                setTimeout(() => {
+                    showRedirect = true;
+                    navigateTo(CoursesMine);
+                }, 2000);
             } else {
                 console.error('Failed to delete lesson.');
                 error = true;
@@ -120,16 +131,19 @@
         <div class="form-container">
             {#if content !== ""}
                 <h3>Lesson Information</h3>
-                <p>Content: {content}</p>
-                <p>Quiz Question: {quizQuestion}</p>
+                <div class="lesson-info">
+                    <p><strong>Content:</strong></p>
+                    <p>{content}</p>
+                    <p><strong>Quiz Question:</strong></p>
+                    <p>{quizQuestion}</p>
+                </div>
                 {#if $loggedUserId !== "" && content !== ""}
                     <button on:click={handleDeleteLesson} class="deletee-button">Delete Lesson</button>
                 {/if}
                 {#if showSuccDel}
                     <ShowSuccDel />
                 {/if}
-
-                {:else}
+            {:else}
                 <h3>This course has no lessons.</h3>
             {/if}
         </div>
@@ -143,6 +157,9 @@
     {#if error}
         <ErrorToast />
     {/if}
+        {#if showRedirect}
+            <RedirectInfo/>
+        {/if}
 </div>
         <br>
         <Button />

@@ -1,6 +1,6 @@
 <script lang="ts">
     import FinishButton from './LessonForms/FinishButton.svelte';
-    import { courseStore, currentCourseId } from "@/storage/form.storage.js";
+    import {courseStore, currentCourseId} from "@/storage/form.storage.js";
     import { onMount } from "svelte";
     import { AppModel } from "@/types/AppModel";
     import { Dropdown } from 'carbon-components-svelte';
@@ -45,18 +45,17 @@
         answer1 = response.answer1 || "";
         answer2 = response.answer2 || "";
         answer3 = response.answer3 || "";
-        correctAnswerIndex = response.correct_answer_index || "0";
+        correctAnswerIndex = response.correct_answer_index;
         courseId = response.course_id || "";
     }
 
-    function handleChange(event) {
+    async function handleChange(event) {
         correctAnswerIndex = event.detail.selectedId;
-        console.log(correctAnswerIndex)
-        selectedAnswer = getSelectedAnswer(correctAnswerIndex);
-        updateCorrectAnswerStatus();
+        selectedAnswer = getSelectedAnswer(parseInt(correctAnswerIndex));
+        await updateCorrectAnswerStatus();
     }
 
-    function updateCorrectAnswerStatus() {
+   async function updateCorrectAnswerStatus() {
         isCorrectAnswerSelected = checkCorrectAnswer();
         console.log('Is correct answer selected?', isCorrectAnswerSelected);
         if(isCorrectAnswerSelected) showFinishButton = true;
@@ -76,7 +75,7 @@
         return "";
     }
 
-    function navigateToCourses() {
+    async function navigateToCourses() {
         navigateTo(Courses);
     }
 
@@ -103,13 +102,13 @@
                     id="correct-answer-dropdown"
                     bind:value={correctAnswerIndex}
                     on:select={handleChange}
-                    selectedId={""}
+                    selectedId={correctAnswerIndex}
                     items={[
-                        { id: "", text: "" },
-                        { id: "0", text: answer1 },
-                        { id: "1", text: answer2 },
-                        { id: "2", text: answer3 }
-                    ]}
+        { id: "", text: "" },
+        { id: "0", text: answer1 },
+        { id: "1", text: answer2 },
+        { id: "2", text: answer3 }
+    ]}
             />
             <p>Selected answer: {selectedAnswer}</p>
             {#if isCorrectAnswerSelected}

@@ -28,6 +28,7 @@
 
     let downloadedImage;
     let currentCourseID;
+    let completedStatus = false;
     currentCourseId.subscribe(value => {
         currentCourseID = value;
     });
@@ -48,11 +49,18 @@
             const response = await AppModel.service.handler.getCourseById($currentCourseId);
             if (response) await assignCourseAttributes(response);
             if ($loggedUserId !== "") await checkEnrollment();
+
+            //ci je hotovy userom
+            const resp: boolean = await AppModel.service.handler.getCompleted($loggedUserId, $currentCourseId);
+            console.log('Je tento kurz hotovy?', resp);
+            if (resp) completedStatus = true;
+
             await loadPictureData();
 
             //zisti, ci ma kurz zadelene lekcie:
             const maLekcie = await AppModel.service.handler.getLesson($currentCourseId);
             if(maLekcie) showGoTOLectureButton = true;
+
         } catch (error) {
             console.error('Error fetching course data:', error);
         } finally {
@@ -89,19 +97,19 @@
             console.log('Error downloading image:', error);
         }
     }
-        async function downloadImage(filename) {
-            try {
-                const response = await fetch(`http://localhost:8080/api/${filename}`);
+    async function downloadImage(filename) {
+        try {
+            const response = await fetch(`http://localhost:8080/api/${filename}`);
 
-                if (response.ok) {
-                    return await response.blob();
-                } else {
-                    console.log('Failed to download image');
-                }
-            } catch (error) {
-                console.log('Error downloading image:', error);
+            if (response.ok) {
+                return await response.blob();
+            } else {
+                console.log('Failed to download image');
             }
+        } catch (error) {
+            console.log('Error downloading image:', error);
         }
+    }
 
     $: userInfo.set({courseEnrolledID:  $currentCourseId, userID: $loggedUserId});
     $: courseStore.set({ title, description, category, level, thumbnail, id, created_by_user_id, enrollTemp});
@@ -145,20 +153,20 @@
     onMount(fetchCourseData);
 
     function handleCreateForum(event) {
-    event.preventDefault();
+        event.preventDefault();
     }
 
     async function handleLearning(e) {
         e.preventDefault();
         try {
-           navigateTo(LessonPage);
+            navigateTo(LessonPage);
         } catch (error) {
             console.error('Error creating new forum:', error);
             showError = true;
         }
     }
-</script>
 
+</script>
 <div class="welcome-header">
     <h1>Course Information</h1>
 </div>
@@ -179,35 +187,38 @@
         <br>
 
         {#if $loggedUserId !== ""}
-            {#if !loading}
-                {#if enrolledBool}
-                    <button class="deletee-button" on:click={e => handleUnsubscribe(e)}>Unsubscribe</button>
+            {#if completedStatus}
+                <p>Completed. ✅</p>
+            {:else}
+                {#if enrolledBool && !completedStatus}
+                    <button class="deletee-button" on:click={handleUnsubscribe}>Unsubscribe</button>
                     {#if showGoTOLectureButton}
-                        <button class="signup-button" on:click={e => handleLearning(e)}>Go to Lecture</button>
+                        <button class="signup-button" on:click={handleLearning}>Go to Lecture</button>
                     {:else}
                         <p>No lectures assigned for this course</p>
                     {/if}
                 {:else}
-                    <button class="edit-button" on:click={e => handleEnroll(e)}>Enroll</button>
+                    <button class="edit-button" on:click={handleEnroll}>Enroll</button>
                 {/if}
             {/if}
-            {#if succEnrolled}
-                <SuccEnrolled/>
-            {/if}
-            {#if succUnsubs}
-                <SuccUnsubs/>
-            {/if}
-            {#if showError}
-                <ShowError/>
-            {/if}
+        {/if}
+        {#if succEnrolled}
+            <SuccEnrolled/>
+        {/if}
+        {#if succUnsubs}
+            <SuccUnsubs/>
+        {/if}
+        {#if showError}
+            <ShowError/>
         {/if}
     </div>
+
     <br>
     {#if $loggedUserId !== ""}
         <div class="form-container">
             <h3>Forum</h3>
             <br>
-            <button class="signup-button" on:click={event => handleCreateForum(event)}>Create Forum</button>
+            <button class="signup-button" on:click={handleCreateForum}>Create Forum</button>
         </div>
     {/if}
 </div>
