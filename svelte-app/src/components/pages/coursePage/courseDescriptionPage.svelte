@@ -25,6 +25,7 @@
     let showError = false;
     let succUpload = false;
 
+
     let downloadedImage;
     let currentCourseID;
     currentCourseId.subscribe(value => {
@@ -108,7 +109,6 @@
                 console.log('Request for enrolling was: ', succ);
                 succEnrolled = true;
                 await checkEnrollment();
-                // + redirect
             }
         } catch (error) {
             showError = true;
@@ -151,7 +151,6 @@
             showError = true;
         }
     }
-
 </script>
 
 <div class="welcome-header">
@@ -172,6 +171,7 @@
         <p>Difficulty: {level}</p>
         <p>Creator: {creator}</p>
         <br>
+
         {#if $loggedUserId !== ""}
             {#if !loading}
                 {#if enrolledBool}

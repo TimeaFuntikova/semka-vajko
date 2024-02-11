@@ -3,9 +3,9 @@ import {
   LessonRequest,
   UserRegistrationRequest,
 } from "@/types/UserRegistrationRequest";
-import { response, Response } from "express";
+import { Response } from "express";
 import { User } from "@/types/User";
-import { isLoggedIn, unregisteredUser } from "@/storage/form.storage";
+import { isLoggedIn } from "@/storage/form.storage";
 
 export class RequestsHandler {
   allUsersObtained: string = "";
@@ -35,6 +35,26 @@ export class RequestsHandler {
       return "invalid_password";
     }
     return "VALID";
+  }
+
+  async deleteLessons(courseID: string): Promise<any> {
+    try {
+      const response: Response = await fetch(
+        `http://localhost:8080/api/deleteLessons?courseID=${courseID}`,
+        {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        },
+      );
+
+      return await this.handleServerResponse(response);
+    } catch (error) {
+      console.error("Error: ", error.message);
+
+      return false;
+    }
   }
 
   async getLesson(courseID: string): Promise<any> {

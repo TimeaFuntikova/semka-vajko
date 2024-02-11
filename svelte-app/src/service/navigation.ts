@@ -5,7 +5,7 @@ import AboutPage from "../components/pages/aboutPage/about.svelte";
 import CoursesPage from "../components/pages/coursesPage/courses.svelte";
 import ContactPage from "../components/pages/contactPage/contact.svelte";
 import ProfilePage from "../components/pages/profilePage/profile.svelte";
-import CourseDescriptionPage from "../components/pages/coursesPage/courseManagement.svelte"; //TODO: opravit import
+import CourseDescriptionPage from "../components/pages/coursesPage/courseManagement.svelte";
 import CreateCourse from "../components/pages/coursePage/createCourse.svelte";
 import UpdateCourse from "../components/pages/coursePage/updateCourse.svelte";
 import { currentPage } from "@/storage/form.storage";

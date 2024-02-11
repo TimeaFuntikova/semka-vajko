@@ -6,7 +6,6 @@ import {AppModel} from "@/types/AppModel";
 let newPassword: string = "";
 isPasswordValid.set(false);
 
-//TODO: sontrooluj validitu a nenutny api call
 function handleInput(password: string): boolean {
     if (AppModel.service.handler.isPasswordValid(password)) {
         isPasswordValid.set(true);

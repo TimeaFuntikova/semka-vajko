@@ -7,7 +7,7 @@
     import CoursesPage from '../src/components/pages/coursesPage/courses.svelte';
     import ContactPage from '../src/components/pages/contactPage/contact.svelte';
     import ProfilePage from '../src/components/pages/profilePage/profile.svelte';
-    import CourseDescriptionPage from '../src/components/pages/coursesPage/courseManagement.svelte'; //TODO: opravit import
+    import CourseDescriptionPage from '../src/components/pages/coursesPage/courseManagement.svelte';
     import CreateCourse from './components/pages/coursePage/createCourse.svelte';
     import UpdateCourse from './components/pages/coursePage/updateCourse.svelte';
     import {

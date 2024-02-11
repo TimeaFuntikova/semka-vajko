@@ -8,9 +8,10 @@
     import ButtonDelete from '../coursesPage/Forms/ButtonDeleteCourse.svelte';
     import {onMount} from "svelte";
     import {AppModel} from "@/types/AppModel";
-    import {courseStore, currentCourseId} from "@/storage/form.storage";
+    import {courseStore, currentCourseId, loggedUserId} from "@/storage/form.storage";
     import LessonForm from './LessonForms/LessonForm.svelte';
     import ErrorToast from './toastError.svelte';
+    import ShowSuccDel from './toastSuccessfullyDeletedLessons.svelte';
 
     let title: string = "";
     let description: string = "";
@@ -22,12 +23,31 @@
     let enrollTemp = "";
 
     let error = false;
-
     let lections = [];
+
+    //lesson attributes
+    let content: string = "";
+    let quizQuestion: string = "";
 
     $: courseStore.set({ title, description, category, level, thumbnail, id, created_by_user_id, enrollTemp});
 
     onMount(fetchCourseData);
+
+    async function fetchLessonData() {
+        const response = await AppModel.service.handler.getLesson($currentCourseId);
+        console.log('Response:', response);
+        if (response) await assignLessonAttributes(response);
+    }
+
+    async function assignLessonAttributes(response) {
+        try{
+            console.log('Assigning lesson attributes with response:', response);
+            content = response.content || "";
+            quizQuestion = response.quizQuestion || "";
+        } catch (error) {
+            console.error('Error fetching lesson data:', error);
+        }
+    }
 
     async function fetchCourseData() {
         try {
@@ -39,7 +59,7 @@
                 level = response.level || "";
                 thumbnail = response.thumbnail || "";
             }
-
+            await fetchLessonData();
         } catch (error) {
             console.error('Error fetching course data:', error);
             error = true;
@@ -58,8 +78,26 @@
     }
 
     let showLessonForm = false;
+    let showSuccDel = false;
 
+    async function handleDeleteLesson() {
+        try {
+            const success = await AppModel.service.handler.deleteLessons($currentCourseId);
+            if (success) {
+                console.log('Lesson deleted successfully.');
+                showSuccDel = true;
+            } else {
+                console.error('Failed to delete lesson.');
+                error = true;
+            }
+        } catch (error) {
+            console.error('Error deleting lesson:', error);
+           error = true;
+        }
+    }
 </script>
+
+
 <div class="welcome-header">
     <h1>Updating {title}</h1>
 </div>
@@ -77,8 +115,26 @@
                 <li>{lection.title}</li>
             {/each}
         </ul>
-<div>
-        {#if !showLessonForm}
+    <div>
+
+        <div class="form-container">
+            {#if content !== ""}
+                <h3>Lesson Information</h3>
+                <p>Content: {content}</p>
+                <p>Quiz Question: {quizQuestion}</p>
+                {#if $loggedUserId !== "" && content !== ""}
+                    <button on:click={handleDeleteLesson} class="deletee-button">Delete Lesson</button>
+                {/if}
+                {#if showSuccDel}
+                    <ShowSuccDel />
+                {/if}
+
+                {:else}
+                <h3>This course has no lessons.</h3>
+            {/if}
+        </div>
+
+        {#if !showLessonForm && content === ""}
         <button on:click={addNewLection} class="signup-button">Add New Lection</button>
         {/if}
         {#if showLessonForm}
