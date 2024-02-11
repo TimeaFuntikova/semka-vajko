@@ -1,12 +1,8 @@
 package com.semestral.service.impl;
 
-import com.semestral.entity.Course;
 import com.semestral.entity.Lesson;
 import com.semestral.service.LessonService;
-import com.semestral.utils.RowMapper;
-import lombok.Setter;
 import org.springframework.stereotype.Service;
-
 import java.sql.SQLException;
 
 @Service
