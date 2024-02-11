@@ -113,59 +113,49 @@ public class User {
         }
     }
 
-    public static User getUserById(long userId) {
+    public static User getUserById(long userId) throws SQLException {
         String query = "SELECT * FROM app_user WHERE user_id = ?";
         List<User> users = DatabaseUtil.executeQuery(query, mapToRowMapper(), userId);
         return users.isEmpty() ? null : users.get(0);
     }
 
-    public static boolean update(User userToBeUpdated, String newNameDemand, String hashedPassword, byte[] salt, String userRole) {
+    public static boolean update(User userToBeUpdated, String hashedPassword, byte[] salt, String userRole) {
         if (userToBeUpdated == null) {
             throw new IllegalArgumentException("User cannot be null");
         }
         try {
-        String updateQuery = "UPDATE app_user SET username = ?, hashed_password = ?, salt = ?, user_role = ? WHERE user_id = ?";
-            DatabaseUtil.executeUpdateOrDelete(updateQuery,
-                    new Object[]{newNameDemand,
+        String updateQuery = "UPDATE app_user SET hashed_password = ?, salt = ?, user_role = ? WHERE user_id = ?";
+            return DatabaseUtil.enroll(updateQuery,
                     hashedPassword,
                     salt,
                     userRole,
-                    userToBeUpdated.getId()}, mapToRowMapper());
-
-            return true;
+                    userToBeUpdated.getId());
         } catch (SQLException e) {
             throw new RuntimeException("Error updating user", e);
         }
     }
 
-    public static boolean delete(User userToDelete) {
+    public static boolean delete(User userToDelete) throws SQLException {
         String deleteQuery = "DELETE FROM app_user WHERE username = ?";
-        try {
-            DatabaseUtil.executeUpdateOrDelete(deleteQuery, new Object[]{userToDelete.getUsername()}, mapToRowMapper());
-            return true;
-        } catch (SQLException e) {
-            throw new RuntimeException("Error deleting user", e);
-        }
+        return DatabaseUtil.enroll(deleteQuery, userToDelete.getUsername());
     }
 
 
-    public static boolean enroll(String userID, String courseID, LocalDate enrollmentDate) throws SQLException {
+    public static boolean enroll(Long userID, Long courseID, LocalDate enrollmentDate) throws SQLException {
         String query = "INSERT INTO app_enrollment (user_id, course_id, enrollment_date) VALUES (?, ?, ?)";
-
-        Long userIDLong = parseLong(userID);
-        Long courseIDLong = parseLong(courseID);
-
-        return DatabaseUtil.enroll(query, userIDLong, courseIDLong, enrollmentDate);
+        return DatabaseUtil.enroll(query, userID, courseID, enrollmentDate);
     }
 
-    public static boolean unsub(String userID, String courseID, LocalDate enrollmentDate) throws SQLException {
+    public static boolean unsub(Long userID, Long courseID) throws SQLException {
         String query = "DELETE FROM app_enrollment WHERE user_id = ? AND course_id = ?";
-
-        Long userIDLong = parseLong(userID);
-        Long courseIDLong = parseLong(courseID);
-
-        return DatabaseUtil.enroll(query, userIDLong, courseIDLong, enrollmentDate);
+        return DatabaseUtil.enroll(query, userID, courseID);
     }
+
+    public static boolean unsubFromAll(Long userID) throws SQLException {
+        String query = "DELETE FROM app_enrollment WHERE user_id = ?";
+        return DatabaseUtil.enroll(query, userID);
+    }
+
 
     public static boolean isEnrolled(Long userID, Long courseID) throws SQLException {
         String query = "SELECT COUNT(1) FROM app_enrollment WHERE user_id = ? AND course_id = ?";

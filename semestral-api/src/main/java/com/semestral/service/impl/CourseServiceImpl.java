@@ -2,7 +2,6 @@ package com.semestral.service.impl;
 
 import com.semestral.entity.Course;
 import com.semestral.service.CourseService;
-import com.semestral.utils.DatabaseUtil;
 import org.springframework.stereotype.Service;
 
 import java.sql.SQLException;
@@ -22,21 +21,26 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
-    public List<Course> getAllCourses(Long userId) {
+    public List<Course> getAllCourses(Long userId) throws SQLException {
         return Course.getAllCourses(userId);
     }
 
     @Override
-    public List<Course> getAllCourses() {
+    public List<Course> getAllCourses() throws SQLException {
         return Course.getAllCourses();
     }
     @Override
-    public Course getCourseById(Long courseId) {
+    public Course getCourseById(Long courseId) throws SQLException {
         return Course.getCourseById(courseId);
     }
 
     @Override
     public boolean delete(Long courseId) throws SQLException {
         return Course.delete(courseId);
+    }
+
+    @Override
+    public boolean deleteAllForUser(Long userID) throws SQLException {
+        return Course.deleteAllForUser(userID);
     }
 }

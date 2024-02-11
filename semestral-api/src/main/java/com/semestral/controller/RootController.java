@@ -1,10 +1,13 @@
 package com.semestral.controller;
 
 import com.semestral.entity.Course;
+import com.semestral.entity.Lesson;
 import com.semestral.entity.User;
 import com.semestral.requests.CourseManagementRequest;
+import com.semestral.requests.LessonRequest;
 import com.semestral.requests.UserRegistrationRequest;
 import com.semestral.service.CourseService;
+import com.semestral.service.LessonService;
 import com.semestral.service.UserService;
 import com.semestral.service.OnlineLearningPlatformService;
 import com.semestral.service.impl.FileStorageService;
@@ -36,6 +39,7 @@ public class RootController {
         private final UserService userService;
 
         private final CourseService courseService;
+        private final LessonService lessonService;
 
         private final FileStorageService fileStorageService;
 
@@ -44,11 +48,13 @@ public class RootController {
                 OnlineLearningPlatformService onlineLearningPlatformService,
                 UserService userService,
                 CourseService courseService,
+                LessonService lessonService,
                 FileStorageService fileStorageService
         ) {
             this.onlineLearningPlatformService = onlineLearningPlatformService;
             this.userService = userService;
             this.courseService = courseService;
+            this.lessonService = lessonService;
             this.fileStorageService = fileStorageService;
         }
 
@@ -62,19 +68,72 @@ public class RootController {
             return onlineLearningPlatformService.getMessage();
     }
 
+    @CrossOrigin(origins = "*")
+    @PostMapping("/createLesson")
+    public ResponseEntity<?> createLesson(@RequestBody LessonRequest lessonRequest) throws IOException, SQLException {
+       Lesson lesson = new Lesson();
+       Long courseID = parseLong(lessonRequest.getCourse_id());
+       lesson.setCourse_id(courseID);
+       lesson.setContent(lessonRequest.getContent());
+       lesson.setQuizQuestion(lessonRequest.getQuiz_question());
+       lesson.setAnswer1(lessonRequest.getAnswer_1());
+       lesson.setAnswer2(lessonRequest.getAnswer_2());
+       lesson.setAnswer3(lessonRequest.getAnswer_3());
+       lesson.setCorrect_answer_index(lessonRequest.getCorrect_answer_index());
+        boolean returnedLesson = lessonService.create(lesson);
+        return ResponseEntity.status(HttpStatus.OK).body(returnedLesson);
+    }
 
     @CrossOrigin(origins = "*")
-    @PostMapping("/uploadImage")
-    public ResponseEntity<?> uploadImage(@RequestParam("image")MultipartFile file) throws IOException {
-        String uploadedImage = fileStorageService.uploadImage(file);
+    @GetMapping("/getLesson")
+    public ResponseEntity<?> getLesson(@RequestParam String courseID) throws IOException, SQLException {
+        Long courseIDLong = parseLong(courseID);
+
+        Lesson returnedLesson = lessonService.getLesson(courseIDLong);
+        return ResponseEntity.status(HttpStatus.OK).body(returnedLesson);
+    }
+
+
+    @CrossOrigin(origins = "*")
+    @PostMapping("/uploadImageAvatar")
+    public ResponseEntity<?> uploadImageAvatar(@RequestParam("image")MultipartFile file, @RequestParam("userId") String userId) throws IOException {
+        Long userIdLong = parseLong(userId);
+        String uploadedImage = fileStorageService.uploadImageAvatar(file, userIdLong);
         return ResponseEntity.status(HttpStatus.OK).body(uploadedImage);
     }
+
+    @CrossOrigin(origins = "*")
+    @PostMapping("/uploadImageCourse")
+    public ResponseEntity<?> uploadImageCourse(@RequestParam("image")MultipartFile file, @RequestParam("courseId") String courseId) throws IOException {
+        Long courseIdLong = parseLong(courseId);
+        String uploadedImage = fileStorageService.uploadImageCourse(file, courseIdLong);
+        return ResponseEntity.status(HttpStatus.OK).body(uploadedImage);
+    }
+
 
     @CrossOrigin(origins = "*")
     @GetMapping("/{filename}")
     public ResponseEntity<?> downloadImage(@PathVariable String filename)  {
         byte[] imageData = fileStorageService.downloadImage(filename);
         return ResponseEntity.status(HttpStatus.OK).contentType(MediaType.valueOf("image/png")).body(imageData);
+    }
+
+    @CrossOrigin(origins = "*")
+    @GetMapping("/getFilename")
+    public ResponseEntity<?> getFilename(@RequestParam String courseId) throws SQLException {
+        Long courseIdLong = parseLong(courseId);
+        String filename = fileStorageService.getFilename(courseIdLong);
+
+        return ResponseEntity.ok(filename);
+    }
+
+    @CrossOrigin(origins = "*")
+    @GetMapping("/getAvatar")
+    public ResponseEntity<?> getAvatar(@RequestParam String userId) throws SQLException {
+        Long userIdLong = parseLong(userId);
+        String avatar = fileStorageService.getAvatar(userIdLong);
+
+        return ResponseEntity.ok(avatar);
     }
 
     @CrossOrigin(origins = "*")
@@ -98,7 +157,7 @@ public class RootController {
      */
     @CrossOrigin(origins = "*")
     @GetMapping("/getUserId")
-      public ResponseEntity<?> getUserId(@RequestParam String username) {
+      public ResponseEntity<?> getUserId(@RequestParam String username) throws SQLException {
         User userFromDB =  userService.getUserByUsername(username);
         Long userID =  userFromDB.getId();
 
@@ -112,7 +171,7 @@ public class RootController {
      */
     @CrossOrigin(origins = "*")
     @GetMapping("/getCourseCreatorUsernameByID")
-    public ResponseEntity<?> getCourseCreatorUsernameByID(@RequestParam String courseCreatorId) {
+    public ResponseEntity<?> getCourseCreatorUsernameByID(@RequestParam String courseCreatorId) throws SQLException {
         long userIdLong = parseLong(courseCreatorId);
         User returnedUser =  userService.getUserByID(userIdLong);
         String usernameReturned = returnedUser.getUsername();
@@ -122,7 +181,7 @@ public class RootController {
 
     @CrossOrigin(origins = "*")
     @GetMapping("/getUserByID")
-    public ResponseEntity<?> getUserByID(@RequestParam String courseCreatorId) {
+    public ResponseEntity<?> getUserByID(@RequestParam String courseCreatorId) throws SQLException {
         long userIdLong = parseLong(courseCreatorId);
         User returnedUser =  userService.getUserByID(userIdLong);
         String usernameReturned = returnedUser.getUsername();
@@ -143,7 +202,7 @@ public class RootController {
             Course courseFromDB =  courseService.getCourseById(courseIdLong);
 
             return ResponseEntity.ok(courseFromDB);
-        } catch (RuntimeException e) {
+        } catch (RuntimeException | SQLException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Could not obtain course info based on course ID.");
             }
     }
@@ -156,7 +215,7 @@ public class RootController {
      */
     @CrossOrigin(origins = "*")
     @PostMapping("/isRegistered")
-    public ResponseEntity<?> isRegistered(@RequestBody UserRegistrationRequest registrationRequest) {
+    public ResponseEntity<?> isRegistered(@RequestBody UserRegistrationRequest registrationRequest) throws SQLException {
     String usernameFromInput = registrationRequest.getName();
             List<User> foundUsers = userService.getAllUsers();
             for(User foundUser: foundUsers) {
@@ -179,7 +238,7 @@ public class RootController {
         try {
             List<User> allUsers = userService.getAllUsers();
             return ResponseEntity.ok(allUsers);
-        }  catch (RuntimeException e) {
+        }  catch (RuntimeException | SQLException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body("Could not load the list of users.");
         }
@@ -201,7 +260,7 @@ public class RootController {
 
                return ResponseEntity.ok(isValid);
            }
-           catch (RuntimeException e) {
+           catch (RuntimeException | SQLException e) {
 
                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                        .body("Password is not valid. Try again.");
@@ -228,7 +287,7 @@ public class RootController {
                 User createdUser = userService.create(userToBeInserted);
 
                 return ResponseEntity.ok(createdUser);
-            } catch (RuntimeException e) {
+            } catch (RuntimeException | SQLException e) {
 
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("the request was not successful.");
             }
@@ -242,12 +301,12 @@ public class RootController {
     @CrossOrigin(origins = "*")
     @PostMapping("/createCourse")
     public ResponseEntity<?> createCourse(@RequestBody CourseManagementRequest courseRequest) {
-
         try {
-            Course course = new Course();
-            LocalDate currentDate = LocalDate.now();
-            Long userIDLong = parseLong(courseRequest.getUserID());
 
+            LocalDate currentDate = LocalDate.now();
+            Long userIDLong = parseLong(courseRequest.getCreated_by_user_id());
+
+            Course course = new Course();
             course.setTitle(courseRequest.getTitle());
             course.setDescription(courseRequest.getDescription());
             course.setCategory(courseRequest.getCategory());
@@ -260,7 +319,7 @@ public class RootController {
 
             return ResponseEntity.ok(createdCourse);
          } catch (RuntimeException e) {
-
+            e.printStackTrace();
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body("The request for creating course was not successful.");
         }
@@ -280,7 +339,7 @@ public class RootController {
             List<Course> allCoursesOfUser = courseService.getAllCourses(userIDLong);
 
             return ResponseEntity.ok(allCoursesOfUser);
-        } catch (RuntimeException e) {
+        } catch (RuntimeException | SQLException e) {
 
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body("The request for obtaining all courses for a user was not successful.");
@@ -351,7 +410,7 @@ public class RootController {
             List<Course> allCourses = courseService.getAllCourses();
 
             return ResponseEntity.ok(allCourses);
-        } catch (RuntimeException e) {
+        } catch (RuntimeException | SQLException e) {
 
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body("The request for obtaining all courses was not successful.");
@@ -368,18 +427,18 @@ public class RootController {
     @CrossOrigin(origins = "*")
     @PutMapping("/updateUserData")
     public ResponseEntity<?> updateUserData(@RequestBody UserRegistrationRequest registrationRequest) {
+
         try {
             User userToBeUpdated = userService.getUserByUsername(registrationRequest.getName());
-            if (registrationRequest.getNewNameDemand() == null) registrationRequest.setNewNameDemand(registrationRequest.getName());
             if (registrationRequest.getNewPasswordDemand() == null) registrationRequest.setNewPasswordDemand(registrationRequest.getPassword());
-            boolean updateSucessfull = userService.update(userToBeUpdated, registrationRequest.getNewNameDemand(), registrationRequest.getNewPasswordDemand());
+            boolean updateSucessfull = userService.update(userToBeUpdated, registrationRequest.getNewPasswordDemand());
 
             System.out.println("updateSuccessfull" + updateSucessfull);
 
             //Todo:Image processing...
 
             return ResponseEntity.ok(updateSucessfull);
-        } catch (RuntimeException e) {
+        } catch (RuntimeException | SQLException e) {
 
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body("The request for updating user data was not successful.");
@@ -397,33 +456,65 @@ public class RootController {
     public ResponseEntity<?> deleteUser(@RequestBody UserRegistrationRequest registrationRequest) {
         try {
             User userToBeDeleted = userService.getUserByUsername(registrationRequest.getName());
-            System.out.println(userToBeDeleted);
+            Long userID = userToBeDeleted.getId();
 
-            if (registrationRequest.getName() == null) {
-                System.out.println("Input is a blank username.");
+            // 1. vymaz najprv enrollments
+            boolean enrollmentsDeleted = userService.unsub(userID);
+            System.out.println("Enrollments deleted: " + enrollmentsDeleted);
+
+            //ziskaj vsetky kurzy, ktore ma user urobene
+            List<Course> courses = courseService.getAllCourses(userID);
+            System.out.println("Courses associated found: " + courses);
+
+
+            if (courses != null && !courses.isEmpty()) {
+                //2. Vymaz mi lekcie pre vsetky taketo kurzy ak existuju
+                for (Course course : courses) {
+                    boolean lessonsDeleted = lessonService.deleteAllByCourse(course.getId());
+                    System.out.println("Lessons deleted for course " + course.getId() + ": " + lessonsDeleted);
+                }
+            }  else {
+                System.out.println("No courses found or courses list is empty.");
             }
 
-            boolean userToReturn = userService.delete(userToBeDeleted);
-            System.out.println(userToReturn);
-            return ResponseEntity.ok(userToReturn);
-        } catch (RuntimeException e) {
+            // 3. potom kurzy ak su nejake pre daneho usera
+            boolean coursesDeleted = courseService.deleteAllForUser(userID);
+            System.out.println("Courses deleted: " + coursesDeleted);
+
+
+            // 3. aj obrazok ak je....
+            boolean picDeleted = fileStorageService.delete(userID);
+            System.out.println("Picture deleted: " + picDeleted);
+
+            // 4. vymaz nakoniec usera
+            boolean userDeleted = userService.delete(userToBeDeleted);
+            System.out.println("User deleted: " + userDeleted);
+
+            if (userDeleted) {
+                return ResponseEntity.ok(userDeleted);
+            } else {
+                return ResponseEntity.ok(userDeleted);
+            }
+
+        } catch (RuntimeException | SQLException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body("The request for deleting the user data was not successful.");
         }
     }
 
+
     @CrossOrigin(origins = "*")
     @PostMapping("/enroll")
     public ResponseEntity<?> enroll(@RequestBody CourseManagementRequest courseManagementRequest) {
         try {
-            String userID = courseManagementRequest.getEnrollTemp();
-            String courseID = courseManagementRequest.getId();
+
+            Long userID = parseLong(courseManagementRequest.getEnrollTemp());
+            Long courseID = parseLong(courseManagementRequest.getId());
             LocalDate enrollmentDate = LocalDate.now();
 
             boolean enrollment = userService.enroll(userID, courseID, enrollmentDate);
 
             return ResponseEntity.ok(enrollment);
-
         } catch (RuntimeException | SQLException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body("The request for enrolling of the user data for specific course was not successful.");
@@ -434,17 +525,17 @@ public class RootController {
     @DeleteMapping("/unsub")
     public ResponseEntity<?> unsub(@RequestBody CourseManagementRequest courseManagementRequest) {
         try {
-            String userID = courseManagementRequest.getEnrollTemp();
-            String courseID = courseManagementRequest.getId();
-            LocalDate enrollmentDate = LocalDate.now();
+            Long userID = parseLong(courseManagementRequest.getEnrollTemp());
+            Long courseID = parseLong(courseManagementRequest.getId());
 
-            boolean enrollment = userService.unsub(userID, courseID, enrollmentDate);
+            System.out.println(userID);
+            System.out.println(courseID);
+            boolean enrollment = userService.unsub(userID, courseID);
 
             return ResponseEntity.ok(enrollment);
-
         } catch (RuntimeException | SQLException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body("The request for enrolling of the user data for specific course was not successful.");
+                    .body("The request for unsubscribing user data from a specific course was not successful.");
         }
     }
 
@@ -456,6 +547,7 @@ public class RootController {
             Long courseID = parseLong(courseManagementRequest.getId());
 
             boolean enrollment = userService.isEnrolled(userID, courseID);
+            System.out.println(enrollment);
 
             return ResponseEntity.ok(enrollment);
         } catch (RuntimeException | SQLException e) {

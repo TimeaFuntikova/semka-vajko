@@ -18,6 +18,8 @@ public class ImageData {
     @Column(name= "image_id")
     private Long image_id;
 
+    private Long user_id;
+    private Long course_id;
     private String name;
     private String type;
 

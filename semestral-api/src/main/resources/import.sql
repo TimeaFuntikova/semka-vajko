@@ -24,24 +24,6 @@ CREATE TABLE IF NOT EXISTS course (
     last_updated DATE
     );
 
--- Module Table
-CREATE TABLE IF NOT EXISTS module (
-                                      module_id SERIAL PRIMARY KEY,
-                                      course_id INT REFERENCES course(course_id),
-    title VARCHAR(255) NOT NULL,
-    description TEXT
-    );
-
--- Quiz Table
-CREATE TABLE IF NOT EXISTS quiz (
-                                    quiz_id SERIAL PRIMARY KEY,
-                                    module_id INT REFERENCES module(module_id),
-    title VARCHAR(255) NOT NULL,
-    description TEXT,
-    total_marks INT,
-    passing_marks INT
-    );
-
 -- Enrollment Table
 CREATE TABLE IF NOT EXISTS enrollment (
                                           enrollment_id SERIAL PRIMARY KEY,
@@ -80,14 +62,20 @@ CREATE TABLE IF NOT EXISTS certificate (
 -- Lesson Table
 CREATE TABLE IF NOT EXISTS lesson (
                                       lesson_id SERIAL PRIMARY KEY,
-                                      module_id INT REFERENCES module(module_id),
+                                      course_id INT REFERENCES course(course_id),
     title VARCHAR(255) NOT NULL,
     content TEXT,
     video_url VARCHAR(255),
     additional_resources TEXT,
     sequence INT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    quiz_question VARCHAR(255),
+    answer_1 VARCHAR(255),
+                                      answer_2 VARCHAR(255),
+                                      answer_3 VARCHAR(255),
+                                      correct_answer VARCHAR(255)
+
     );
 
 ALTER TABLE APP_COURSE
@@ -106,3 +94,9 @@ ALTER TABLE app_image_data
     ADD COLUMN image_data bytea;
 
 DELETE * from app_enrollment where user_id = 1;
+
+ALTER TABLE app_course
+    ADD CONSTRAINT fk_user_username
+        FOREIGN KEY (created_by_user_id)
+            REFERENCES app_user(user_id)
+            ON DELETE CASCADE;

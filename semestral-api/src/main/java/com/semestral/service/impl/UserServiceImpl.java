@@ -11,13 +11,12 @@ import com.semestral.utils.PasswordUtil;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Locale;
 
 @Service
 public class UserServiceImpl implements UserService {
 
     @Override
-    public boolean isUsernameTaken(String username) {
+    public boolean isUsernameTaken(String username) throws SQLException {
         String query = "SELECT COUNT(*) FROM app_user WHERE username = ?";
         List<Boolean> result = DatabaseUtil.executeQuery(query,
                 resultSet -> resultSet.getInt(1) > 0, username);
@@ -25,7 +24,7 @@ public class UserServiceImpl implements UserService {
         return !result.isEmpty() && result.get(0);
     }
     @Override
-    public User create(User userToBeInserted) {
+    public User create(User userToBeInserted) throws SQLException {
         if (isUsernameTaken(userToBeInserted.getUsername())) {
             throw new RuntimeException("Username is already taken");
         }
@@ -40,19 +39,19 @@ public class UserServiceImpl implements UserService {
 
 
     @Override
-    public List<User> getAllUsers() {
+    public List<User> getAllUsers() throws SQLException {
         String query = "SELECT * FROM app_user";
         return DatabaseUtil.executeQuery(query, mapUserRow);
     }
 
     @Override
-    public User getUserByUsername(String username) {
+    public User getUserByUsername(String username) throws SQLException {
         String query = "SELECT * FROM app_user WHERE username = ?";
         return DatabaseUtil.executeQuery(query, mapUserRow, username).stream().findFirst().orElse(null);
     }
 
     @Override
-    public User getUserByID(long userId) {
+    public User getUserByID(long userId) throws SQLException {
         return User.getUserById(userId);
     }
 
@@ -64,7 +63,7 @@ public class UserServiceImpl implements UserService {
      * @return boolean verified login
      */
     @Override
-    public boolean verify(String password, String username) {
+    public boolean verify(String password, String username) throws SQLException {
         User retrievedUser = getUserByUsername(username);
         byte[] saltFromUser = retrievedUser.getSalt();
         String storedHashPassword = retrievedUser.getHashedPassword();
@@ -72,40 +71,34 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public boolean update(User userToBeUpdated, String newNameDemand, String newPasswordDemand) {
+    public boolean update(User userToBeUpdated, String newPasswordDemand) throws SQLException {
 
-        //ak sa zmeni len meno:
-        if (isUsernameTaken(newNameDemand)) {
-            throw new RuntimeException("Requested username is already taken, please choose another.");
-        }
-
-        if (newNameDemand != null) {
-            userToBeUpdated.setUsername(newNameDemand);
-        }
-
-        //Password should be validated on client's side at this time -- having valid one now...
-        //AND SHOULD BE UPTADED ONLY IF WAS SET
         byte[] salt = PasswordUtil.generateSalt();
         String hashedPassword = PasswordUtil.hashPassword(newPasswordDemand, salt);
 
         String userRole = userToBeUpdated.getUserRole();
 
-        return User.update(userToBeUpdated, newNameDemand, hashedPassword, salt, userRole);
+        return User.update(userToBeUpdated, hashedPassword, salt, userRole);
     }
 
     @Override
-    public boolean delete(User userToDelete) {
+    public boolean delete(User userToDelete) throws SQLException {
         return User.delete(userToDelete);
     }
 
     @Override
-    public boolean enroll(String userID, String courseID, LocalDate enrollmentDate) throws SQLException {
+    public boolean enroll(Long userID, Long courseID, LocalDate enrollmentDate) throws SQLException {
         return User.enroll(userID, courseID, enrollmentDate);
     }
 
     @Override
-    public boolean unsub(String userID, String courseID, LocalDate enrollmentDate) throws SQLException {
-        return User.unsub(userID, courseID, enrollmentDate);
+    public boolean unsub(Long userID, Long courseID) throws SQLException {
+        return User.unsub(userID, courseID);
+    }
+
+    @Override
+    public boolean unsub(Long userID) throws SQLException {
+        return User.unsubFromAll(userID);
     }
 
     @Override

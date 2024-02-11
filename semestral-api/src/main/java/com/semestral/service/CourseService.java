@@ -11,12 +11,14 @@ public interface CourseService {
 
     boolean update(Course course);
 
-    List<Course> getAllCourses(Long userId);
+    List<Course> getAllCourses(Long userId) throws SQLException;
 
-    List<Course> getAllCourses();
+    List<Course> getAllCourses() throws SQLException;
 
-    Course getCourseById(Long courseId);
+    Course getCourseById(Long courseId) throws SQLException;
 
     boolean delete(Long courseId) throws SQLException;
+
+    boolean deleteAllForUser(Long userID) throws SQLException;
 
 }

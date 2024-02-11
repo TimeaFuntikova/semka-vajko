@@ -16,7 +16,7 @@ public class CourseManagementRequest {
     private Date dateCreated;
     private Date lastUpdated;
     private String thumbnail;
-    private String userID;
+    private String created_by_user_id;
     private String id;
 
     private String enrollTemp;
