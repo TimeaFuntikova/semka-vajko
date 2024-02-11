@@ -1,3 +1,34 @@
+.course-image {
+	width: 200px;
+	height: auto;
+}
+
+.lesson-info {
+	border: 1px solid #ccc;
+	border-radius: 5px;
+	padding: 10px;
+	margin-bottom: 20px;
+}
+
+.lesson-info p {
+	margin: 0;
+}
+
+.lesson-info p:not(:last-child) {
+	margin-bottom: 10px;
+}
+
+.lesson-info strong {
+	font-weight: bold;
+	margin-right: 5px;
+}
+
+.avatar-container {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	flex-direction: column;
+}
 
 * {
 	box-sizing: border-box;
@@ -56,7 +87,6 @@ body {
 .danger-zone h3 {
 	color: #B22222;
 }
-
 .about-page-wrapper {
 	background-color: white;
 	border-radius: 10px;
@@ -69,9 +99,33 @@ body {
 .about-section {
 	display: flex;
 	align-items: center;
-	justify-content: center;
 	gap: 20px;
 	margin: 40px;
+}
+
+.about-image {
+	max-width: 300px;
+	height: auto;
+	border-radius: 10px;
+	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.about-content {
+	flex: 1;
+}
+
+.about-content h2 {
+	font-size: 24px;
+	color: #333;
+	margin-bottom: 10px;
+}
+
+.about-content p {
+	font-size: 16px;
+	color: #666;
+	text-align: justify;
+	line-height: 1.6;
+	margin-bottom: 5px;
 }
 
 @keyframes flyInFromBelow {
@@ -108,6 +162,18 @@ body {
 
 .about-text p {
 	margin-bottom: 5px;
+}
+
+.hero-content h2 {
+	font-size: 28px;
+	color: black;
+	margin-bottom: 20px;
+}
+
+.hero-content p {
+	font-size: 16px;
+	color: black;
+	margin-bottom: 20px;
 }
 
 .terms-section {
@@ -161,7 +227,7 @@ body .signup-container {
 	align-items: center;
 }
 
-.login-button, .signup-button, .search-bar {
+.login-button, .signup-button, .edit-button, .deletee-button, .search-bar {
 	padding: 8px 16px;
 	font-size: 14px;
 	color: white;
@@ -176,6 +242,13 @@ body .signup-container {
 	background-color: #B286DB;
 }
 
+.edit-button {
+	background-color: forestgreen;
+}
+
+.deletee-button {
+	background-color: indianred;
+}
 .login-button:hover, .signup-button:hover {
 	background-color: #745CDB;
 }
@@ -305,7 +378,7 @@ body main {
 body .main {
 	padding: 50px;
 	text-align: center;
-	margin-top: 120px;
+	margin-top: 15%;
 }
 
 body .side {

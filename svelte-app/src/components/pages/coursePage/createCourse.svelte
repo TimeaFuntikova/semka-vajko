@@ -5,46 +5,39 @@
     import CourseImage from '../coursesPage/Forms/CourseImage.svelte';
     import CourseCategory from '../coursesPage/Forms/CourseCategory.svelte';
     import Button from '../coursesPage/Forms/ButtonCreateCourse.svelte';
-    import {AppModel} from "@/types/AppModel";
-    import {createEventDispatcher} from "svelte";
+    import {courseStore} from "@/storage/form.storage";
 
     let title: string = "";
-    let description: string  = "";
+    let description: string = "";
     let category: string = "";
-    let difficultyLevel: string = "";
-    let image: string  = "";
+    let level: string = "";
+    let thumbnail: string = "";
+    let id: string = "";
+    let created_by_user_id = "";
+    let enrollTemp = "";
 
-    const dispatch = createEventDispatcher();
+    $: courseStore.set({ title, description, category, level, thumbnail, id, created_by_user_id, enrollTemp});
 
-    async function handleSubmit() {
-        dispatch('submit');
-        const courseData = { title, description, category, difficultyLevel, image };
-        console.log('Course created:', courseData);
-
-        // API call to create the course
-        try {
-            //await AppModel.service.handler.createCourse(courseData);
-            console.log('Course created:', courseData);
-        } catch (error) {
-            console.error('Error creating course:', error);
-        }
+    function onFileSelected(event) {
+        thumbnail = URL.createObjectURL(event.file);
+        courseStore.update(currentData => ({ ...currentData, thumbnail: event.file }));
     }
-</script>
 
+</script>
 
 <div class="welcome-header">
     <h1>Creating course</h1>
 </div>
 
-
 <div class="main">
     <div class="form-container">
-        <CourseImage bind:value={image} />
+        <CourseImage on:change={e => onFileSelected(e)}/>
         <CourseName bind:value={title} />
         <CourseDescription bind:value={description} />
-        <CourseCategory bind:value={category} />
-        <CourseLevel bind:value={difficultyLevel} />
-       <br><br>
-        <Button on:click={handleSubmit} />
+        <CourseCategory bind:value={category}/>
+        <CourseLevel bind:value={level} />
+        <br><br>
+        <Button/>
+        <br>
     </div>
 </div>

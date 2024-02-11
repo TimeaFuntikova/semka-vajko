@@ -14,7 +14,7 @@
                 <h2>Sign in</h2>
                 <h4>You need to be signed in first to browse your courses and assignments</h4>
                 {#if $unregisteredUser}
-                       <NotRegisteredInfo/>
+                        <NotRegisteredInfo/>
                 {/if}
                 <Form/>
                 <Button/>
